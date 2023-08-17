@@ -63,15 +63,11 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: const Color.fromRGBO(14, 29, 48, 1),        
         actions: <Widget>[
           IconButton(
-            onPressed: () {
-              
-            },
+            onPressed: () {},
             icon: const Icon(Icons.shopping_cart_rounded),
           ),
           IconButton(
-            onPressed: () {
-              
-            },
+            onPressed: () {},
             icon: const Icon(Icons.notifications_active_outlined ),
           ),
           IconButton(
@@ -81,20 +77,33 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(Icons.logout_rounded),
           )
         ],
-        
       ),
       drawer: Drawer(
         shadowColor: Colors.white70,
         backgroundColor: Colors.white60,
         width: 240,
+        shape: const BeveledRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(3.0),
+            bottomRight: Radius.circular(3.0),
+          )
+        ),
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(14, 29, 48, 1),
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: Color.fromRGBO(14, 29, 48, 0.941),
               ),
-              child: Text('Drawer Header', style: TextStyle(color: Colors.white),),
+              // child: Text('Drawer Header', style: TextStyle(color: Colors.white),),
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.only(top: 30),
+                    child: Image.asset('assets/PG_Logo.png',),                      
+                  )
+                ],
+              ),
             ),
             ListTile(
               title: const Text('Tab 1'),
