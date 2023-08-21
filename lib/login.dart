@@ -21,7 +21,7 @@ class _DealerLoginState extends State<DealerLogin> {
   String? email='', passcode='';
   final _loginKey = GlobalKey<FormState>();
   
-  bool isPasswordValid(String passcode) { if(passcode.length <= 8 || passcode.length >= 5){ return false; } return true; }
+  bool isPasswordValid(String passcode) { if(passcode.length == 8){ return false; } return true; }
 
   bool _isLoginEnable = true;
 
@@ -37,15 +37,16 @@ class _DealerLoginState extends State<DealerLogin> {
     setState(() {
       _isLoginEnable = false;
     });
-    final response = await http
-        .post(Uri.https(globals.baseURL,"/api/reseller-login"), body: {
+    final response = await http.post(Uri.https(globals.baseURL,"/api/reseller-login"), body: {
       "email": email,
       "pass_code": passcode,
     });
 
     final data = jsonDecode(response.body);
+    var resCode = response.statusCode;
+    
     String message = data['message'];
-    if (message == 'Logged in Successfully.') {
+    if (resCode == 200 && data['api_token'] != null) {
       int id = data['customer']['id'];
       int customerId = data['customer']['customer_id'];
       String userEmail = data['customer']['email'];
@@ -55,17 +56,17 @@ class _DealerLoginState extends State<DealerLogin> {
       String ordersCount = data['customer']['orders_count'];
       String totalSpent = data['customer']['total_spent'];
       int status = data['customer']['status'];
-      // bool pass_validity = data['customer']['pass_validity'];
+      String apiToken = data['api_token'];
       if (status == 1) {
         setState(() {
           _loginStatus = LoginStatus.signIn;
-          savePref(id, customerId, userEmail, firstName, lastName, phone, ordersCount, totalSpent, status);
+          savePref(id, customerId, userEmail, firstName, lastName, phone, ordersCount, totalSpent, status, apiToken);
         });
       }else{
         errorToast('Oops! your account is deactivated.');
       }
     }else{
-      errorToast('${message} !!');
+      errorToast('$message !!');
     }
     setState(() {
       _isLoginEnable = true;
@@ -73,7 +74,7 @@ class _DealerLoginState extends State<DealerLogin> {
   }
 
   signOut() async {    
-    savePref(0, 0, '', '', '', '', '', '', 0);
+    savePref(0, 0, '', '', '', '', '', '', 0, '');
     setState(() {
       _loginStatus = LoginStatus.notSignIn;
     });
@@ -88,10 +89,10 @@ class _DealerLoginState extends State<DealerLogin> {
         webPosition: "center",
         webBgColor: "linear-gradient(to top, red, yellow)",
         backgroundColor: Colors.red,
-        textColor: Colors.white);        
+        textColor: Colors.white);
   }
 
-  savePref(int id, int customerId, String userEmail, String firstName, String lastName, String phone, String ordersCount, String totalSpent, int status) async {
+  savePref(int id, int customerId, String userEmail, String firstName, String lastName, String phone, String ordersCount, String totalSpent, int status, String apiToken) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt('id', id);
     await prefs.setInt('customerId', customerId);
@@ -102,6 +103,7 @@ class _DealerLoginState extends State<DealerLogin> {
     await prefs.setString('ordersCount', ordersCount);
     await prefs.setString('totalSpent', totalSpent);
     await prefs.setInt('status', status);
+    await prefs.setString('apiToken', apiToken);
   }
 
   int? userStatus = 0;
