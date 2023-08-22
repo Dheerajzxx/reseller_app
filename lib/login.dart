@@ -135,10 +135,11 @@ class _DealerLoginState extends State<DealerLogin> {
           ),
           child: Scaffold(
             backgroundColor: Colors.transparent,
+            resizeToAvoidBottomInset : false,
             body: Stack(
               children: [
                 Container(
-                  padding: const EdgeInsets.only(left: 0, top: 120),
+                  padding: const EdgeInsets.only(left: 0, top: 100),
                   child: Column(
                     children: <Widget>[
                       // Logo
