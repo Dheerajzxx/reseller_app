@@ -102,30 +102,152 @@ class _OrdersListState extends State<OrdersList> {
             onTap: (){},
             child: Container(
               alignment: const Alignment(0, 0),
-              color: Colors.amber,
+              margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
               padding: const EdgeInsets.all(20),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    offset: Offset(5.0, 5.0),
+                    blurRadius: 10.0,
+                    spreadRadius: 2.0,
+                  ),
+                  BoxShadow(
+                    color: Colors.white,
+                    offset: Offset(0.0, 0.0),
+                    blurRadius: 0.0,
+                    spreadRadius: 0.0,
+                  ),
+                ],
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Expanded(
-                    child: Text('# ${ordersListApiData.orders.data[index].name}', textAlign: TextAlign.left,),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children:[
+                        SizedBox(
+                          child: Container(
+                            // margin: const EdgeInsets.only(bottom: 40),
+                            child: Text(
+                              '# ${ordersListApiData.orders.data[index].name}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w900,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          child: Container(
+                            margin: const EdgeInsets.only(top: 40, left: 20),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  '₹',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15.0,
+                                    color: Color.fromRGBO(47, 93 , 255, 1)
+                                  ),
+                                ),
+                                Text(
+                                  ordersListApiData.orders.data[index].totalPrice,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 22.0,
+                                    color: Color.fromRGBO(47, 93 , 255, 1)
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   Expanded(
-                    child: Text('₹ ${ordersListApiData.orders.data[index].totalPrice}', textAlign: TextAlign.left,),
-                  ),
-                  Expanded(
-                    // child: .
-                    child: Text(DateFormat.yMMMd().format(ordersListApiData.orders.data[index].orderDate)),
-                  ),
-                  Expanded(
-                    child: Text(ordersListApiData.orders.data[index].lineItemsCount.toString()),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.check, size: 16,color: Colors.green),
+                            const Padding(padding: EdgeInsets.only(right: 4)),
+                            Row(
+                              children: [
+                                const Text(
+                                  'Order Date: ',
+                                  style: TextStyle(
+                                    fontSize: 13.0,
+                                  ),
+                                ),
+                                Text(
+                                  DateFormat.yMMMd().format(ordersListApiData.orders.data[index].orderDate),
+                                  style: const TextStyle(
+                                    fontSize: 13.0,
+                                    fontWeight: FontWeight.w800
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const Padding(padding: EdgeInsets.only(top: 10)),
+                        Row(
+                          children: [
+                            const Icon(Icons.check, size: 16,color: Colors.green),
+                            const Padding(padding: EdgeInsets.only(right: 4)),
+                            Row(
+                              children: [
+                                const Text(
+                                  'Products Count: ',
+                                  style: TextStyle(
+                                    fontSize: 13.0,
+                                  ),
+                                ),
+                                Text(
+                                  ordersListApiData.orders.data[index].lineItemsCount.toString(),
+                                  style: const TextStyle(
+                                    fontSize: 13.0,
+                                    fontWeight: FontWeight.w800
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 10),
+                          child: ElevatedButton(
+                            onPressed: (){
+                              
+                            }, 
+                            child: Container(
+                              padding: const EdgeInsets.all(0.0),
+                              child: const Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text('View Details'),
+                                ],
+                              ),
+                            )
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

@@ -249,7 +249,7 @@ class _DealerLoginState extends State<DealerLogin> {
                                     padding: const EdgeInsets.all(15.0),
                                     child: const Text('Login'),
                                   )
-                                  )
+                                )
                               ),
                             ],
                           ),
