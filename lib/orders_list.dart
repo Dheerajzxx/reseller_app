@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'package:intl/intl.dart';
 import 'globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:intl/intl.dart';
+import 'package:reseller_plusgrow/order_detail.dart';
 
 class OrdersList extends StatefulWidget {
   const OrdersList({super.key});
@@ -90,7 +91,8 @@ class _OrdersListState extends State<OrdersList> {
       errMessage.isNotEmpty ? Center(child: Text(errMessage),) : ordersListApiData.orders.data.isEmpty ? const Center(child: Text('No Data')) : 
       ListView.builder(
         itemCount: ordersListApiData.orders.data.length,
-        itemBuilder: (context, index) => getOrderRow(index)),
+        itemBuilder: (context, index) => getOrderRow(index)
+      ),
     );
   }
 
@@ -132,14 +134,11 @@ class _OrdersListState extends State<OrdersList> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:[
                         SizedBox(
-                          child: Container(
-                            // margin: const EdgeInsets.only(bottom: 40),
-                            child: Text(
-                              '# ${ordersListApiData.orders.data[index].name}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w900,
-                                fontSize: 15.0,
-                              ),
+                          child: Text(
+                            '# ${ordersListApiData.orders.data[index].name}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 15.0,
                             ),
                           ),
                         ),
@@ -226,8 +225,12 @@ class _OrdersListState extends State<OrdersList> {
                           margin: const EdgeInsets.only(top: 10),
                           child: ElevatedButton(
                             onPressed: (){
-                              
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => OrderDetail(ordersListApiData.orders.data[index].orderId)),
+                              );
                             }, 
+                            style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll(Color.fromRGBO(47, 93, 255, 1))),
                             child: Container(
                               padding: const EdgeInsets.all(0.0),
                               child: const Column(
