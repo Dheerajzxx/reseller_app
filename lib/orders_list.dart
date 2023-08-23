@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'package:intl/intl.dart';
 import 'globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:intl/intl.dart';
+import 'package:reseller_plusgrow/order_detail.dart';
 
 class OrdersList extends StatefulWidget {
   const OrdersList({super.key});
@@ -129,11 +130,13 @@ class _OrdersListState extends State<OrdersList> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: ListTile(
-            title: Text('# ${ordersListApiData.orders.data[index].name}',
+            title: Text(
+              '# ${ordersListApiData.orders.data[index].name}',
               style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 18),),
+                  fontSize: 18),
+            ),
             subtitle: Text(
                 DateFormat.yMMMd()
                     .format(ordersListApiData.orders.data[index].orderDate),

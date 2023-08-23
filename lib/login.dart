@@ -196,7 +196,8 @@ class _DealerLoginState extends State<DealerLogin> {
                               Container(
                                 margin: const EdgeInsets.only(bottom: 20),
                                 child: TextFormField(
-                                  // initialValue: 'krahul@plusgrow.com',
+                                  autofocus: true,
+                                  initialValue: 'krahul@plusgrow.com',
                                   onSaved: (e) => email = e,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {                                      
@@ -219,7 +220,7 @@ class _DealerLoginState extends State<DealerLogin> {
                               
                               // Passcode Input
                               TextFormField(
-                                // initialValue: '60556646',
+                                initialValue: '60556646',
                                 onSaved: (e) => passcode = e,
                                   validator: (passcode) {
                                     if (passcode == null || passcode.isEmpty) {
