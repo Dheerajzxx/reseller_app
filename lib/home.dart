@@ -56,7 +56,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+        resizeToAvoidBottomInset : false,
+        appBar: AppBar(
         backgroundColor: const Color.fromRGBO(14, 29, 48, 1),        
         actions: <Widget>[
           IconButton(
@@ -75,7 +76,7 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      drawer: Drawer(
+        drawer: Drawer(
         shadowColor: Colors.white70,
         backgroundColor: Colors.white60,
         width: 240,
@@ -135,7 +136,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: SizedBox.expand(
+        body: SizedBox.expand(
         child: PageView(
           controller: _pageController,
           onPageChanged: (index) {
@@ -400,7 +401,17 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            Container(color: const Color.fromARGB(255, 90, 130, 91),),
+            // Settings
+            Container(
+              decoration: const BoxDecoration(
+                color: Colors.white38,
+              ),
+              child: const Column(
+                children: <Widget>[
+
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -409,7 +420,7 @@ class _HomePageState extends State<HomePage> {
       //   tooltip: 'Increment',
       //   child: const Icon(Icons.add),
       // ),
-      bottomNavigationBar: BottomNavyBar(
+        bottomNavigationBar: BottomNavyBar(
         selectedIndex: _currentIndex,
         showElevation: true,
         itemCornerRadius: 24,
@@ -420,18 +431,21 @@ class _HomePageState extends State<HomePage> {
           _pageController?.jumpToPage(index);
         },
         items: <BottomNavyBarItem>[
+          // Orders
           BottomNavyBarItem(
             title: const Text('Orders'),
             icon: const Icon(Icons.shopping_bag),
             activeColor: Colors.white,
             textAlign: TextAlign.center,
           ),
+          // Tickets
           BottomNavyBarItem(
             title: const Text('Tickets'),
             icon: const Icon(Icons.style),
             activeColor: Colors.white,
             textAlign: TextAlign.center,
           ),
+          // Settings
           BottomNavyBarItem(
             title: const Text('Settings'),
             icon: const Icon(Icons.settings),
@@ -439,7 +453,7 @@ class _HomePageState extends State<HomePage> {
             textAlign: TextAlign.center,
           ),
         ],
-      )
+      ),
     );
   }
 }
