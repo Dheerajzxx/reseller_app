@@ -15,7 +15,7 @@ class OrdersList extends StatefulWidget {
 }
 
 class _OrdersListState extends State<OrdersList> {
-  String apiToken = '', name = '', errMessage = '';
+  String apiToken = '', errMessage = '';
   late OrdersListApiData ordersListApiData;
   bool isLoaded = false;
 
@@ -64,10 +64,6 @@ class _OrdersListState extends State<OrdersList> {
               to: 0,
               total: 0));
     }
-  }
-
-  goBack() {
-    Navigator.pushNamed(context, 'login');
   }
 
   errorToast(String toast) {
@@ -124,32 +120,40 @@ class _OrdersListState extends State<OrdersList> {
   Widget getOrderRow(int index) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Card(
-        elevation: 0,
-        color: Colors.teal.shade300,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListTile(
-            title: Text(
-              '# ${ordersListApiData.orders.data[index].name}',
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18),
-            ),
-            subtitle: Text(
-                DateFormat.yMMMd()
-                    .format(ordersListApiData.orders.data[index].orderDate),
+      child: GestureDetector(
+        onTap: (){ 
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => OrderDetail(ordersListApiData.orders.data[index].orderId)),
+          );
+         },
+        child: Card(
+          elevation: 0,
+          color: Colors.teal.shade300,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListTile(
+              title: Text(
+                '# ${ordersListApiData.orders.data[index].name}',
                 style: const TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 15)),
-            trailing: Text(
-              "₹ ${ordersListApiData.orders.data[index].totalPrice}",
-              style: const TextStyle(
-                  color: Colors.indigo,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20),
+                    fontSize: 18),
+              ),
+              subtitle: Text(
+                  DateFormat.yMMMd()
+                      .format(ordersListApiData.orders.data[index].orderDate),
+                  style: const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15)),
+              trailing: Text(
+                "₹ ${ordersListApiData.orders.data[index].totalPrice}",
+                style: const TextStyle(
+                    color: Colors.indigo,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+              ),
             ),
           ),
         ),

@@ -37,10 +37,13 @@ class _DealerLoginState extends State<DealerLogin> {
     setState(() {
       _isLoginEnable = false;
     });
-    final response = await http.post(Uri.https(globals.baseURL,"/api/reseller-login"), body: {
+    final response = await http.post(Uri.https(globals.baseURL,"/api/reseller-login"),headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        }, body: jsonEncode({
       "email": email,
       "pass_code": passcode,
-    });
+    }));
 
     final data = jsonDecode(response.body);
     var resCode = response.statusCode;
