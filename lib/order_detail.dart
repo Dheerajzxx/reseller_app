@@ -87,7 +87,7 @@ class _OrderDetailState extends State<OrderDetail> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(14, 29, 48, 1),   
-        title: const Text('Order History'),     
+        title: Text("Order Details"),
         actions: <Widget>[
           IconButton(
             onPressed: () {},
@@ -123,14 +123,14 @@ class _OrderDetailState extends State<OrderDetail> {
               style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 18),
+                  fontSize: 14),
             ),
             subtitle: Text(
                 '${orderDetailApiData.order.lineItems[index].variant.title} - ${orderDetailApiData.order.lineItems[index].sku} - ${orderDetailApiData.order.lineItems[index].grams}',
                 style: const TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
-                    fontSize: 15)),
+                    fontSize: 12)),
             trailing: Text(
               "₹ ${orderDetailApiData.order.lineItems[index].price} x ${orderDetailApiData.order.lineItems[index].quantity}",
               style: const TextStyle(
