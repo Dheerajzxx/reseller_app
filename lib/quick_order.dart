@@ -4,6 +4,7 @@ import 'globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
 
 class QuickOrder extends StatefulWidget {
   const QuickOrder({super.key});
@@ -13,26 +14,194 @@ class QuickOrder extends StatefulWidget {
 }
 
 class _QuickOrderState extends State<QuickOrder> {
+
+  String apiToken = '', errMessage = '';
+  String? search = '';
+  TextEditingController editingController = TextEditingController();
+  late QuickOrderApiData quickOrderApiData;
+  bool isLoaded = false; Timer? _debounce;
+
+  List newlist = List.filled(10, null,growable: true);
+  List blanklist = List.filled(10, null,growable: true);
+
+
+  getPref() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      apiToken = prefs.getString("apiToken") ?? '';
+    });
+    quickOrderApiData = await getProducts();
+  }
+
+  void filterSearchResults(String query) {
+    if(query.length > 2){
+      if (_debounce?.isActive ?? false) _debounce!.cancel();
+      _debounce = Timer(const Duration(milliseconds: 500), () {   
+        setState(() {
+          isLoaded = false;
+          search = query;
+        });
+        getProducts();
+      });
+    }
+  }
+
+  @override
+void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+}
+
+  Future<QuickOrderApiData> getProducts() async {
+    final response =
+        await http.post(Uri.https(globals.baseURL, "/api/quick-order"), headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $apiToken'
+    }, body: jsonEncode({
+      "search":search
+    }));
+    var resCode = response.statusCode;
+      setState(() {
+        isLoaded = true;
+      });
+    if (resCode == 200) {
+      QuickOrderApiData quickOrderApiData = quickOrderApiDataFromJson(response.body);
+      setState(() {
+        // newlist = blanklist;
+        newlist = quickOrderApiData.productVariants;
+      });
+      return quickOrderApiData;
+    } else {
+      errorToast('Oops! Something went wrong.');
+      setState(() {
+        errMessage = 'Oops! Something went wrong.';
+      });
+      return QuickOrderApiData(
+          message: 'Oops! Something went wrong.',
+          productVariants: []
+      );
+    }
+  }
+
+  errorToast(String toast) {
+    return Fluttertoast.showToast(
+        msg: toast,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 3,
+        webPosition: "center",
+        webBgColor: "linear-gradient(to top, red, yellow)",
+        backgroundColor: Colors.red,
+        textColor: Colors.white);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getPref();
+  }
+  
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color.fromRGBO(14, 29, 48, 1),   
+        title: const Text('Quick Order'),     
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.shopping_cart_rounded),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.notifications_active_outlined ),
+          )
+        ],
+      ),
+      body:Container(
+        margin: const EdgeInsets.only(top: 10),
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                onChanged: (value) {
+                  filterSearchResults(value);
+                },
+                controller: editingController,
+                decoration: const InputDecoration(
+                    labelText: "Search",
+                    hintText: "Search",
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+              ),
+            ),
+            Expanded(
+              child: !isLoaded ? const Center(child: CircularProgressIndicator(),):
+              errMessage.isNotEmpty ? Center(child: Text(errMessage),) : quickOrderApiData.productVariants.isEmpty ? const Center(child: Text('No Data Found!!')) : 
+              ListView.builder(
+                itemCount: newlist.length,
+                itemBuilder: (context, index) => getProductRow(index)
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getProductRow(int index) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        elevation: 0,
+        color: Colors.teal.shade300,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListTile(
+            title: Text(
+              newlist[index].product.title,
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18),
+            ),
+            subtitle: Text(
+                '${newlist[index].title} - ${newlist[index].sku}',
+                style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15)),
+            trailing: Text(
+              "₹ ${newlist[index].price}",
+              style: const TextStyle(
+                  color: Colors.indigo,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
-OrderDetailApiData orderDetailApiDataFromJson(String str) => OrderDetailApiData.fromJson(json.decode(str));
+QuickOrderApiData quickOrderApiDataFromJson(String str) => QuickOrderApiData.fromJson(json.decode(str));
 
-String orderDetailApiDataToJson(OrderDetailApiData data) => json.encode(data.toJson());
+String quickOrderApiDataToJson(QuickOrderApiData data) => json.encode(data.toJson());
 
-class OrderDetailApiData {
-    final String message;
-    final List<ProductVariant> productVariants;
+class QuickOrderApiData {
+    String message;
+    List<ProductVariant> productVariants;
 
-    OrderDetailApiData({
+    QuickOrderApiData({
         required this.message,
         required this.productVariants,
     });
 
-    factory OrderDetailApiData.fromJson(Map<String, dynamic> json) => OrderDetailApiData(
+    factory QuickOrderApiData.fromJson(Map<String, dynamic> json) => QuickOrderApiData(
         message: json["message"],
         productVariants: List<ProductVariant>.from(json["product_variants"].map((x) => ProductVariant.fromJson(x))),
     );
@@ -44,21 +213,21 @@ class OrderDetailApiData {
 }
 
 class ProductVariant {
-    final int id;
-    final int productId;
-    final int inventoryItemId;
-    final int variantId;
-    final String title;
-    final String price;
-    final String sku;
-    final int inventoryQuantity;
-    final int storeId;
-    final String imageSrc;
-    final String productTitle;
-    final String vendor;
-    final String productType;
-    final String discountText;
-    final Product product;
+     int id;
+     int productId;
+     int inventoryItemId;
+     int variantId;
+     String title;
+     String price;
+     String sku;
+     int inventoryQuantity;
+     int storeId;
+     String imageSrc;
+     String productTitle;
+     String vendor;
+     String productType;
+     String discountText;
+     Product product;
 
     ProductVariant({
         required this.id,
@@ -116,15 +285,17 @@ class ProductVariant {
 }
 
 class Product {
-    final int id;
-    final int productId;
-    final String publishedScope;
-    final int status;
-    final int storeId;
+     int id;
+     int productId;
+     String title;
+     String publishedScope;
+     int status;
+     int storeId;
 
     Product({
         required this.id,
         required this.productId,
+        required this.title,
         required this.publishedScope,
         required this.status,
         required this.storeId,
@@ -133,6 +304,7 @@ class Product {
     factory Product.fromJson(Map<String, dynamic> json) => Product(
         id: json["id"],
         productId: json["product_id"],
+        title: json["title"],
         publishedScope: json["published_scope"],
         status: json["status"],
         storeId: json["store_id"],
@@ -141,6 +313,7 @@ class Product {
     Map<String, dynamic> toJson() => {
         "id": id,
         "product_id": productId,
+        "title": title,
         "published_scope": publishedScope,
         "status": status,
         "store_id": storeId,

@@ -16,7 +16,7 @@ class OrderDetail extends StatefulWidget {
 
 class _OrderDetailState extends State<OrderDetail> {
 
-  String apiToken = '', name = '', errMessage = '';
+  String apiToken = '', errMessage = '';
   late OrderDetailApiData orderDetailApiData;
   bool isLoaded = false;
 
