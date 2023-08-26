@@ -126,7 +126,7 @@ class _OrderDetailState extends State<OrderDetail> {
                   fontSize: 14),
             ),
             subtitle: Text(
-                '${orderDetailApiData.order.lineItems[index].variant.title} - ${orderDetailApiData.order.lineItems[index].sku} - ${orderDetailApiData.order.lineItems[index].grams}',
+                '${orderDetailApiData.order.lineItems[index].variant.title} - ${orderDetailApiData.order.lineItems[index].sku}${orderDetailApiData.order.lineItems[index].sku != ''? " - " : ''}${orderDetailApiData.order.lineItems[index].grams}',
                 style: const TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -240,7 +240,7 @@ class LineItem {
         id: json["id"],
         lineItemId: json["line_item_id"],
         name: json["name"],
-        sku: json["sku"],
+        sku: json["sku"] ?? '',
         price: json["price"],
         quantity: json["quantity"],
         grams: json["grams"],
