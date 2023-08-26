@@ -180,7 +180,7 @@ class _QuickOrderState extends State<QuickOrder> {
                     width: 100,
                     image: NetworkImage(newlist[index].imageSrc),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Expanded(
@@ -190,42 +190,42 @@ class _QuickOrderState extends State<QuickOrder> {
                       children: [
                         Text(
                           newlist[index].product.title,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w500,
                               color: Colors.white
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
                         Text(
                           "Variant: ${newlist[index].title}",
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w500,
                               color: Colors.white
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
                         Text(
                           "SKU: ${newlist[index].sku}",
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w500,
                               color: Colors.white
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
                         Text(
                           "Vendor: ${newlist[index].vendor}",
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w500,
                               color: Colors.white
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Text(

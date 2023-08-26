@@ -87,7 +87,7 @@ class _OrderDetailState extends State<OrderDetail> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(14, 29, 48, 1),   
-        title: Text("Order Details"),
+        title: const Text("Order Details"),
         actions: <Widget>[
           IconButton(
             onPressed: () {},
