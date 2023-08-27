@@ -23,6 +23,7 @@ class _QuickOrderState extends State<QuickOrder> {
 
   List newlist = List.filled(10, null, growable: true);
   List blanklist = List.filled(10, null, growable: true);
+  List _isCartDisabled = List.filled(10, null, growable: true);
 
   getPref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -68,7 +69,7 @@ class _QuickOrderState extends State<QuickOrder> {
       QuickOrderApiData quickOrderApiData =
           quickOrderApiDataFromJson(response.body);
       setState(() {
-        // newlist = blanklist;
+        _isCartDisabled = blanklist;
         newlist = quickOrderApiData.productVariants;
       });
       return quickOrderApiData;
@@ -80,6 +81,33 @@ class _QuickOrderState extends State<QuickOrder> {
       return QuickOrderApiData(
           message: 'Oops! Something went wrong.', productVariants: []);
     }
+  }
+
+  void addToCart(index) async {
+    setState(() {
+      _isCartDisabled[index] = 1;
+    });
+    var response = await http.post(Uri.https(globals.baseURL,"/api/add-to-cart"),headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $apiToken'
+        }, body: jsonEncode({
+      "product_id": newlist[index].productId,
+      "variant_id": newlist[index].variantId,
+    }));
+
+    var addCartData = jsonDecode(response.body);
+    var resCode = response.statusCode;
+    
+    String message = addCartData['message'];
+    if (resCode == 200) {
+      errorToast(message);
+    }else{
+      errorToast('Oops! Product not added to cart.');
+    }
+    setState(() {
+       _isCartDisabled[index] = null;
+    });
   }
 
   errorToast(String toast) {
@@ -240,7 +268,7 @@ class _QuickOrderState extends State<QuickOrder> {
                           alignment: Alignment.centerRight,
                           child: InkWell(
                             onTap: () {
-                              print(index);
+                              _isCartDisabled[index] == 1 ? null : addToCart(index);
                             },
                             child: Container(
                               height: 35,
@@ -249,8 +277,10 @@ class _QuickOrderState extends State<QuickOrder> {
                                   color: Colors.indigoAccent,
                                   borderRadius:
                                   BorderRadius.circular(5)),
-                              child: const Center(
-                                child: Icon(Icons.add_shopping_cart, color: Colors.white,)
+                              child: Center(
+                                child:  _isCartDisabled[index] == 1 ? 
+                                const SizedBox(height: 15, width: 15, child: Center( child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.0,))) :
+                                const Icon(Icons.add_shopping_cart, color: Colors.white,)
                               ),
                             ),
                           ),

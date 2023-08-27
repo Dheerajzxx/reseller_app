@@ -45,7 +45,7 @@ class _DealerLoginState extends State<DealerLogin> {
       "pass_code": passcode,
     }));
 
-    final data = jsonDecode(response.body);
+    var data = jsonDecode(response.body);
     var resCode = response.statusCode;
     
     String message = data['message'];
