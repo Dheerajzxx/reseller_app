@@ -215,61 +215,69 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
+                  // Last Five Purchase
                   SizedBox(
-                    child: Container(
-                      padding: const EdgeInsets.only(top: 30, bottom: 30),
-                      margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            offset: Offset(5.0, 5.0),
-                            blurRadius: 10.0,
-                            spreadRadius: 2.0,
-                          ),
-                          BoxShadow(
-                            color: Colors.white,
-                            offset: Offset(0.0, 0.0),
-                            blurRadius: 0.0,
-                            spreadRadius: 0.0,
-                          ),
-                        ],
-                      ),
-                      child: const Center(
-                        child: Text('Last 5 Purchases', style: TextStyle(
-                          fontSize: 25.0,
-                        ),),
+                    child: GestureDetector(
+                      onTap: (){ Navigator.pushNamed(context, 'lastFivePurchases'); },
+                      child: Container(
+                        padding: const EdgeInsets.only(top: 30, bottom: 30),
+                        margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              offset: Offset(5.0, 5.0),
+                              blurRadius: 10.0,
+                              spreadRadius: 2.0,
+                            ),
+                            BoxShadow(
+                              color: Colors.white,
+                              offset: Offset(0.0, 0.0),
+                              blurRadius: 0.0,
+                              spreadRadius: 0.0,
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Text('Last 5 Purchases', style: TextStyle(
+                            fontSize: 25.0,
+                          ),),
+                        ),
                       ),
                     ),
                   ),
+                  // Your Top 10
                   SizedBox(
-                    child: Container(
-                      padding: const EdgeInsets.only(top: 30, bottom: 30),
-                      margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            offset: Offset(5.0, 5.0),
-                            blurRadius: 10.0,
-                            spreadRadius: 2.0,
-                          ),
-                          BoxShadow(
-                            color: Colors.white,
-                            offset: Offset(0.0, 0.0),
-                            blurRadius: 0.0,
-                            spreadRadius: 0.0,
-                          ),
-                        ],
-                      ),
-                      child: const Center(
-                        child: Text('Your top 10', style: TextStyle(
-                          fontSize: 25.0,
-                        ),),
+                    child: GestureDetector(
+                      onTap: (){ Navigator.pushNamed(context, 'yourTopTen'); },
+                      child: Container(
+                        padding: const EdgeInsets.only(top: 30, bottom: 30),
+                        margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              offset: Offset(5.0, 5.0),
+                              blurRadius: 10.0,
+                              spreadRadius: 2.0,
+                            ),
+                            BoxShadow(
+                              color: Colors.white,
+                              offset: Offset(0.0, 0.0),
+                              blurRadius: 0.0,
+                              spreadRadius: 0.0,
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Text('Your top 10', style: TextStyle(
+                            fontSize: 25.0,
+                          ),),
+                        ),
                       ),
                     ),
                   )
