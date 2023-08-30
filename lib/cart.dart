@@ -16,6 +16,7 @@ class _CartState extends State<Cart> {
   String apiToken = '', errMessage = '';
   late CartApiData cartApiData;
   bool isLoaded = false;
+  List itemsList = List.filled(0, null, growable: true);
 
   getPref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -39,6 +40,9 @@ class _CartState extends State<Cart> {
     if (resCode == 200) {
       CartApiData cartApiData =
           cartApiDataFromJson(response.body);
+      setState(() {
+        itemsList = cartApiData.cartItems;
+      });
       return cartApiData;
     } else {
       errorToast('Oops! Something went wrong.');
@@ -49,6 +53,41 @@ class _CartState extends State<Cart> {
           message: 'Oops! Something went wrong.',
           cartItems: []
       );
+    }
+  }
+
+  void updateCart(index, type) async {
+    var qty = itemsList[index].quantity;
+    if(qty == 1 && type == 'minus'){qty = 0;}
+    if(qty > 1 && type == 'minus'){qty--;}
+    if(type == 'plus'){qty++;}
+
+    final response = await http.post(Uri.https(globals.baseURL,"/api/update-cart"),headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $apiToken'
+        }, body: jsonEncode({
+      "cart_item_id": itemsList[index].id,
+      "quantity": qty,
+    }));
+    
+    var data = jsonDecode(response.body);
+    var resCode = response.statusCode;
+    
+    String message = data['message'];
+    if (resCode == 200) {
+      if(qty == 0){
+        setState(() {
+          itemsList.removeAt(index);
+        });
+      }else{
+        setState(() {
+          itemsList[index].quantity = qty;
+        });
+      }
+      errorToast('$message !!');
+    }else{
+      errorToast('$message !!');
     }
   }
 
@@ -82,10 +121,10 @@ class _CartState extends State<Cart> {
               ? Center(
                   child: Text(errMessage),
                 )
-              : cartApiData.cartItems.isEmpty
+              : itemsList.isEmpty
                   ? const Center(child: Text('No Data'))
                   : ListView.builder(
-                      itemCount: cartApiData.cartItems.length,
+                      itemCount: itemsList.length,
                       itemBuilder: (context, index) => getItemsRow(index)),
     );
   }
@@ -121,7 +160,7 @@ class _CartState extends State<Cart> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          cartApiData.cartItems[index].productTitle,
+                          itemsList[index].productTitle,
                           style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w500,
                               color: Colors.white
@@ -131,7 +170,7 @@ class _CartState extends State<Cart> {
                           height: 5,
                         ),
                         Text(
-                          "Variant: ${cartApiData.cartItems[index].variant.title}",
+                          "Variant: ${itemsList[index].variant.title}",
                           style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w500,
                               color: Colors.white
@@ -141,7 +180,7 @@ class _CartState extends State<Cart> {
                           height: 5,
                         ),
                         Text(
-                          "SKU: ${cartApiData.cartItems[index].sku}",
+                          "SKU: ${itemsList[index].sku}",
                           style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w500,
                               color: Colors.white
@@ -151,7 +190,7 @@ class _CartState extends State<Cart> {
                           height: 5,
                         ),
                         Text(
-                          "Vendor: ${cartApiData.cartItems[index].vendor}",
+                          "Vendor: ${itemsList[index].vendor}",
                           style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w500,
                               color: Colors.white
@@ -161,33 +200,57 @@ class _CartState extends State<Cart> {
                           height: 10,
                         ),
                         Text(
-                          "₹ ${cartApiData.cartItems[index].price}",
+                          "₹ ${itemsList[index].price}",
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.w800,
                             color: Colors.indigoAccent.shade400
                           ),
                         ),
 
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: InkWell(
-                            onTap: () {
-                              // _isCartDisabled[index] == 1 ? null : addToCart(index);
-                            },
-                            child: Container(
-                              height: 35,
-                              width: 50,
-                              decoration: BoxDecoration(
-                                  color: Colors.indigoAccent,
-                                  borderRadius:
-                                  BorderRadius.circular(5)),
-                              child: const Center(
-                                // child:  _isCartDisabled[index] == 1 ? 
-                                // const SizedBox(height: 15, width: 15, child: Center( child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.0,))) :
-                                // const Icon(Icons.add_shopping_cart, color: Colors.white,)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            IconButton(
+                              onPressed: () { updateCart(index, 'minus'); },
+                              icon: const Icon(Icons.remove_circle_outline_rounded)
+                            ),
+                            OutlinedButton(
+                              onPressed: (){ null; },
+                              child: Text(
+                                itemsList[index].quantity.toString(),
+                                style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold
+                                ),
                               ),
                             ),
-                          ),
+                            IconButton(
+                              onPressed: () { updateCart(index, 'plus'); },
+                              icon: const Icon(Icons.add_circle_outline_rounded)
+                            ),
+                            const Padding(padding: EdgeInsets.only(right: 20)),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: InkWell(
+                                onTap: () {
+                                  // _isCartDisabled[index] == 1 ? null : addToCart(index);
+                                },
+                                child: Container(
+                                  height: 35,
+                                  width: 70,
+                                  decoration: BoxDecoration(
+                                      color: const Color.fromARGB(240, 210, 74, 64),
+                                      borderRadius:
+                                      BorderRadius.circular(5)),
+                                  child: const Center(
+                                    child: Text('Delete'),
+                                    // child:  _isCartDisabled[index] == 1 ? 
+                                    // const SizedBox(height: 15, width: 15, child: Center( child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.0,))) :
+                                    // const Icon(Icons.add_shopping_cart, color: Colors.white,)
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ]
                         ),
                       ],
                     ),
