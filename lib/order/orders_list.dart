@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
-import 'globals.dart' as globals;
+import '../globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:reseller_plusgrow/order_detail.dart';
+import 'package:reseller_plusgrow/order/order_detail.dart';
 
 class OrdersList extends StatefulWidget {
   const OrdersList({super.key});
@@ -87,20 +87,7 @@ class _OrdersListState extends State<OrdersList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(14, 29, 48, 1),
-        title: const Text('Order History'),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.shopping_cart_rounded),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications_active_outlined),
-          )
-        ],
-      ),
+      appBar: const globals.AppBarItems('Order History'),
       body: !isLoaded
           ? const Center(
               child: CircularProgressIndicator(),

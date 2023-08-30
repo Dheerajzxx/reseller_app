@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: const Color.fromRGBO(14, 29, 48, 1),        
         actions: <Widget>[
           IconButton(
-            onPressed: () {},
+            onPressed: () { Navigator.pushNamed(context, 'cart'); },
             icon: const Icon(Icons.shopping_cart_rounded),
           ),
           IconButton(

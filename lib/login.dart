@@ -107,6 +107,7 @@ class _DealerLoginState extends State<DealerLogin> {
     await prefs.setString('totalSpent', totalSpent);
     await prefs.setInt('status', status);
     await prefs.setString('apiToken', apiToken);
+    await prefs.setInt('cartCount', 0);
   }
 
   int? userStatus = 0;
