@@ -11,6 +11,7 @@ void main() {
     debugShowCheckedModeBanner: false,
     initialRoute: 'login',
     routes: {
+      '/':(context) => const DealerLogin(),
       'login':(context) => const DealerLogin(),
       'cart':(context) => const Cart(),
       'ordersList':(context) => const OrdersList(),
