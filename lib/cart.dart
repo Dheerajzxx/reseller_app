@@ -312,7 +312,7 @@ class _CartState extends State<Cart> {
                 maxLines: null,
                 minLines: 3,
                 decoration: const InputDecoration(                                  
-                  contentPadding: EdgeInsets.only(left: 10),
+                  contentPadding: EdgeInsets.all(20),
                   hintText: 'Order Notes',
                   labelText: 'Order Notes',
                   border: UnderlineInputBorder(),

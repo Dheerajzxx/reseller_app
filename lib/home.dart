@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
   int? id = 0 ;
   String email = "", firstName = "", lastName = "";
 
-  getPref() async {
+  void getPref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       id = prefs.getInt("id");
@@ -291,93 +291,106 @@ class _HomePageState extends State<HomePage> {
               ),
               child: Column(
                 children: <Widget>[
+                  // Ask A Question
                   SizedBox(
-                    child: Container(
-                      padding: const EdgeInsets.only(top: 30, bottom: 30),
-                      margin: const EdgeInsets.all(20),                      
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            offset: Offset(5.0, 5.0),
-                            blurRadius: 10.0,
-                            spreadRadius: 2.0,
-                          ),
-                          BoxShadow(
-                            color: Colors.white,
-                            offset: Offset(0.0, 0.0),
-                            blurRadius: 0.0,
-                            spreadRadius: 0.0,
-                          ),
-                        ],
-                      ),
-                      child: const Center(
-                        child: Text('Ask A Question', style: TextStyle(
-                          fontSize: 25.0,
-                        ),),
+                    child: GestureDetector(
+                      onTap: (){ Navigator.pushNamed(context, 'askQues'); },
+                      child: Container(
+                        padding: const EdgeInsets.only(top: 30, bottom: 30),
+                        margin: const EdgeInsets.all(20),                      
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              offset: Offset(5.0, 5.0),
+                              blurRadius: 10.0,
+                              spreadRadius: 2.0,
+                            ),
+                            BoxShadow(
+                              color: Colors.white,
+                              offset: Offset(0.0, 0.0),
+                              blurRadius: 0.0,
+                              spreadRadius: 0.0,
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Text('Ask A Question', style: TextStyle(
+                            fontSize: 25.0,
+                          ),),
+                        ),
                       ),
                     ),
                   ),
+                  // Question History
                   SizedBox(
-                    child: Container(
-                      padding: const EdgeInsets.only(top: 30, bottom: 30),
-                      margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            offset: Offset(5.0, 5.0),
-                            blurRadius: 10.0,
-                            spreadRadius: 2.0,
-                          ),
-                          BoxShadow(
-                            color: Colors.white,
-                            offset: Offset(0.0, 0.0),
-                            blurRadius: 0.0,
-                            spreadRadius: 0.0,
-                          ),
-                        ],
-                      ),
-                      child: const Center(
-                        child: Text('Question History', style: TextStyle(
-                          fontSize: 25.0,
-                        ),),
+                    child: GestureDetector(
+                      onTap: (){ Navigator.pushNamed(context, 'faqs'); },
+                      child: Container(
+                        padding: const EdgeInsets.only(top: 30, bottom: 30),
+                        margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              offset: Offset(5.0, 5.0),
+                              blurRadius: 10.0,
+                              spreadRadius: 2.0,
+                            ),
+                            BoxShadow(
+                              color: Colors.white,
+                              offset: Offset(0.0, 0.0),
+                              blurRadius: 0.0,
+                              spreadRadius: 0.0,
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Text('Question History', style: TextStyle(
+                            fontSize: 25.0,
+                          ),),
+                        ),
                       ),
                     ),
                   ),
+                  // Warranty Claim
                   SizedBox(
-                    child: Container(
-                      padding: const EdgeInsets.only(top: 30, bottom: 30),
-                      margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            offset: Offset(5.0, 5.0),
-                            blurRadius: 10.0,
-                            spreadRadius: 2.0,
-                          ),
-                          BoxShadow(
-                            color: Colors.white,
-                            offset: Offset(0.0, 0.0),
-                            blurRadius: 0.0,
-                            spreadRadius: 0.0,
-                          ),
-                        ],
-                      ),
-                      child: const Center(
-                        child: Text('Warranty Claim', style: TextStyle(
-                          fontSize: 25.0,
-                        ),),
+                    child: GestureDetector(
+                      onTap: (){},
+                      child: Container(
+                        padding: const EdgeInsets.only(top: 30, bottom: 30),
+                        margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              offset: Offset(5.0, 5.0),
+                              blurRadius: 10.0,
+                              spreadRadius: 2.0,
+                            ),
+                            BoxShadow(
+                              color: Colors.white,
+                              offset: Offset(0.0, 0.0),
+                              blurRadius: 0.0,
+                              spreadRadius: 0.0,
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Text('Warranty Claim', style: TextStyle(
+                            fontSize: 25.0,
+                          ),),
+                        ),
                       ),
                     ),
                   ),
+                  // Warranty Claim History
                   SizedBox(
                     child: GestureDetector(
                       onTap: (){},
@@ -413,6 +426,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+            // Settings
             Container(color: const Color.fromARGB(255, 90, 130, 91),),
           ],
         ),

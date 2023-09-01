@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:reseller_plusgrow/login.dart';
+import 'package:reseller_plusgrow/cart.dart';
 import 'package:reseller_plusgrow/order/orders_list.dart';
 import 'package:reseller_plusgrow/order/quick_order.dart';
 import 'package:reseller_plusgrow/order/last_five_purchase.dart';
 import 'package:reseller_plusgrow/order/your_top_ten.dart';
-import 'package:reseller_plusgrow/cart.dart';
+import 'package:reseller_plusgrow/ticket/ask.dart';
+import 'package:reseller_plusgrow/ticket/faqs.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -18,6 +20,8 @@ void main() {
       'quickOrder':(context) => const QuickOrder(),
       'lastFivePurchases':(context) => const LastFive(),
       'yourTopTen':(context) => const YourTopTen(),
+      'askQues':(context) => const Ask(),
+      'faqs':(context) => const Faqs(),
     },
   ));
 }

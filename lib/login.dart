@@ -25,7 +25,7 @@ class _DealerLoginState extends State<DealerLogin> {
 
   bool _isLoginEnable = true;
 
-  check() {
+  void check() {
     final form = _loginKey.currentState;
     if (form != null && form.validate()) {  //form != null && form.validate() == form!.validate()
       form.save();
@@ -33,7 +33,7 @@ class _DealerLoginState extends State<DealerLogin> {
     }
   }
   
-  login() async {
+  void login() async {
     setState(() {
       _isLoginEnable = false;
     });
@@ -76,7 +76,7 @@ class _DealerLoginState extends State<DealerLogin> {
     });
   }
 
-  signOut() async {    
+  void signOut() async {    
     savePref(0, 0, '', '', '', '', '', '', 0, '');
     setState(() {
       _loginStatus = LoginStatus.notSignIn;
@@ -95,7 +95,7 @@ class _DealerLoginState extends State<DealerLogin> {
         textColor: Colors.white);
   }
 
-  savePref(int id, int customerId, String userEmail, String firstName, String lastName, String phone, String ordersCount, String totalSpent, int status, String apiToken) async {
+  void savePref(int id, int customerId, String userEmail, String firstName, String lastName, String phone, String ordersCount, String totalSpent, int status, String apiToken) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt('id', id);
     await prefs.setInt('customerId', customerId);
@@ -111,7 +111,7 @@ class _DealerLoginState extends State<DealerLogin> {
   }
 
   int? userStatus = 0;
-  getPref() async {
+  void getPref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       userStatus = prefs.getInt("status");
