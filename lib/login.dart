@@ -250,7 +250,8 @@ class _DealerLoginState extends State<DealerLogin> {
                                 child: ElevatedButton(
                                   onPressed: (){
                                     _isLoginEnable ? check() : null;
-                                  }, 
+                                  },
+                                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(const Color.fromRGBO(13, 66, 255, 1))),
                                   child: Container(
                                     padding: const EdgeInsets.all(15.0),
                                     child: const Text('Login'),

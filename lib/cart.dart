@@ -21,7 +21,7 @@ class _CartState extends State<Cart> {
   List itemsList = List.filled(0, null, growable: true);
   final _checkoutKey = GlobalKey<FormState>();
 
-  getPref() async {
+  void getPref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       apiToken = prefs.getString("apiToken") ?? '';
@@ -95,7 +95,7 @@ class _CartState extends State<Cart> {
     }
   }
 
-  submitCart() async {
+  void submitCart() async {
     final form = _checkoutKey.currentState;
     form!.save();
     final response = await http.post(Uri.https(globals.baseURL,"/api/checkout"),headers: {
@@ -125,7 +125,7 @@ class _CartState extends State<Cart> {
     goToOrders(context);
   }
 
-  goToOrders(BuildContext context){
+  void goToOrders(BuildContext context){
       Navigator.push( context, MaterialPageRoute(builder: (context) => const OrdersList()));
   }
 
