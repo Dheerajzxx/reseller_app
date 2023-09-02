@@ -3,6 +3,7 @@ import 'dart:convert';
 import '../globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Faqs extends StatefulWidget {
@@ -16,6 +17,8 @@ class _FaqState extends State<Faqs> {
   String apiToken = '', errMessage = '';
   late FaqApiData faqApiData;
   bool isLoaded = false;
+  int _currentIndex = 0;
+  PageController? _pageController;
 
   void getPref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -73,29 +76,86 @@ class _FaqState extends State<Faqs> {
   void initState() {
     super.initState();
     getPref();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController?.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const globals.AppBarItems('Ask Question'),
-      body: !isLoaded
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : errMessage.isNotEmpty
-              ? Center(
-                  child: Text(errMessage),
+      appBar: const globals.AppBarItems('Question History'),
+      body: SizedBox.expand(
+        child: PageView(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() => _currentIndex = index);
+          },
+          children: <Widget>[
+            // Questions
+            !isLoaded
+              ? const Center(
+                  child: CircularProgressIndicator(),
                 )
-              : faqApiData.faqs.isEmpty
-                  ? const Center(child: Text('No Data'))
-                  : ListView.builder(
-                      itemCount: faqApiData.faqs.length,
-                      itemBuilder: (context, index) => getFaqsRow(index)),
-                  // : ListView.builder(
-                  //     itemCount: faqApiData.questions.length,
-                  //     itemBuilder: (context, index) => getQuesRow(index)),
-                      
+              : errMessage.isNotEmpty
+                  ? Center(
+                      child: Text(errMessage),
+                    )
+                  : faqApiData.questions.isEmpty
+                      ? const Center(child: Text('No Data'))
+                      : ListView.builder(
+                          itemCount: faqApiData.questions.length,
+                          itemBuilder: (context, index) => getQuesRow(index)
+                        ),
+            // Questions
+            !isLoaded
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : errMessage.isNotEmpty
+                  ? Center(
+                      child: Text(errMessage),
+                    )
+                  : faqApiData.faqs.isEmpty
+                      ? const Center(child: Text('No Data'))
+                      : ListView.builder(
+                          itemCount: faqApiData.faqs.length,
+                          itemBuilder: (context, index) => getFaqsRow(index)
+                        ),
+            Container(color: const Color.fromARGB(255, 16, 223, 23),),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavyBar(
+        selectedIndex: _currentIndex,
+        showElevation: true,
+        itemCornerRadius: 24,
+        curve: Curves.easeIn,
+        mainAxisAlignment:MainAxisAlignment.spaceEvenly,
+        backgroundColor:const Color.fromRGBO(14, 29, 48, 1),
+        onItemSelected: (index) {
+          setState(() => _currentIndex = index);
+          _pageController?.jumpToPage(index);
+        },
+        items: <BottomNavyBarItem>[
+          BottomNavyBarItem(
+            title: const Text('Questions'),
+            icon: const Icon(Icons.question_answer_outlined),
+            activeColor: Colors.white,
+            textAlign: TextAlign.center,
+          ),
+          BottomNavyBarItem(
+            title: const Text('FAQs'),
+            icon: const Icon(Icons.help_outline_rounded),
+            activeColor: Colors.white,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      )
     );
   }
 
@@ -103,14 +163,19 @@ class _FaqState extends State<Faqs> {
     return Container(
         margin: const EdgeInsets.only(top: 20),
         child: ExpansionTile(
+           expandedAlignment: Alignment.centerLeft,
+           expandedCrossAxisAlignment: CrossAxisAlignment.start,
           title: Row(
             children: [
               const Icon(Icons.help_outline_rounded),
-              Text(faqApiData.questions[index].question)
+              Text(' ${faqApiData.questions[index].question}')
             ],
           ),
           children: <Widget>[
-            Text(faqApiData.questions[index].answer)
+            Container(
+              padding: const EdgeInsets.only(top: 10, bottom: 10, left: 45, right: 10),
+              child: Text(faqApiData.questions[index].answer)
+            ),
           ],
         )
       );
@@ -123,11 +188,14 @@ class _FaqState extends State<Faqs> {
           title: Row(
             children: [
               const Icon(Icons.help_outline_rounded),
-              Text(faqApiData.faqs[index].question)
+              Text(' ${faqApiData.faqs[index].question}')
             ],
           ),
           children: <Widget>[
-            Text(faqApiData.faqs[index].answer)
+            Container(
+              padding: const EdgeInsets.only(top: 10, bottom: 10, left: 45, right: 10),
+              child: Text(faqApiData.faqs[index].answer)
+            ),
           ],
         )
       );
