@@ -168,7 +168,10 @@ class _FaqState extends State<Faqs> {
           title: Row(
             children: [
               const Icon(Icons.help_outline_rounded),
-              Text(' ${faqApiData.questions[index].question}')
+              Text(' ${faqApiData.questions[index].question} ', style: const TextStyle(fontWeight: FontWeight.bold),),
+              faqApiData.questions[index].answer == 'Waiting For Answer' ? 
+              const Text('Pending', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)) : 
+              const Text('')
             ],
           ),
           children: <Widget>[
@@ -187,8 +190,8 @@ class _FaqState extends State<Faqs> {
         child: ExpansionTile(
           title: Row(
             children: [
-              const Icon(Icons.help_outline_rounded),
-              Text(' ${faqApiData.faqs[index].question}')
+              const Icon(Icons.help_outline_rounded, color: Color.fromRGBO(13, 66, 255, 1),),
+              Text(' ${faqApiData.faqs[index].question}', style: const TextStyle(fontWeight: FontWeight.bold))
             ],
           ),
           children: <Widget>[
