@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> {
         drawer: Drawer(
         shadowColor: Colors.white70,
         backgroundColor: Colors.white60,
-        width: 240,
+        width: 200,
         shape: const BeveledRectangleBorder(
           borderRadius: BorderRadius.only(
             topRight: Radius.circular(3.0),
@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                 children: <Widget>[
                   Container(
                     padding: const EdgeInsets.only(top: 30),
-                    child: Image.asset('assets/PG_Logo.png',),                      
+                    child: Image.asset('assets/icon.png',height: 50,width: 50,),
                   )
                 ],
               ),
