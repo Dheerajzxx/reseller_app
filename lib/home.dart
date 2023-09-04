@@ -91,20 +91,22 @@ class _HomePageState extends State<HomePage> {
           children: [
             DrawerHeader(
               decoration: const BoxDecoration(
-                color: Color.fromRGBO(14, 29, 48, 0.941),
+                color: Colors.blueAccent
               ),
               // child: Text('Drawer Header', style: TextStyle(color: Colors.white),),
               child: Stack(
                 children: <Widget>[
                   Container(
-                    padding: const EdgeInsets.only(top: 30),
-                    child: Image.asset('assets/icon.png',height: 50,width: 50,),
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Image.asset('assets/PG_Logo.png',height: 50,width: 200,),
                   )
                 ],
               ),
             ),
+            // Orders
             ListTile(
-              title: const Text('Tab 1'),
+              leading: const Icon(Icons.shopping_bag),
+              title: const Text('Orders'),
               selected: _selectedIndex == 0,
               onTap: () {
                 // Update the state of the app
@@ -113,8 +115,10 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pop(context);
               },
             ),
+            // Tickets
             ListTile(
-              title: const Text('Tab 2'),
+              leading:  const Icon(Icons.style),
+              title: const Text('Tickets'),
               selected: _selectedIndex == 1,
               onTap: () {
                 // Update the state of the app
@@ -123,8 +127,10 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pop(context);
               },
             ),
+            // My Profile
             ListTile(
-              title: const Text('Tab 3'),
+              leading: const Icon(Icons.person),
+              title: const Text('My Profile'),
               selected: _selectedIndex == 2,
               onTap: () {
                 // Update the state of the app
@@ -465,7 +471,7 @@ class _HomePageState extends State<HomePage> {
           ),
           // Settings
           BottomNavyBarItem(
-            title: const Text('Settings'),
+            title: const Text('My Profile'),
             icon: const Icon(Icons.settings),
             activeColor: Colors.white,
             textAlign: TextAlign.center,

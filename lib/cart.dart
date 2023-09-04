@@ -41,8 +41,7 @@ class _CartState extends State<Cart> {
     });
     var resCode = response.statusCode;
     if (resCode == 200) {
-      CartApiData cartApiData =
-          cartApiDataFromJson(response.body);
+      CartApiData cartApiData = cartApiDataFromJson(response.body);
       setState(() {
         itemsList = cartApiData.cartItems;
       });
@@ -52,45 +51,53 @@ class _CartState extends State<Cart> {
       setState(() {
         errMessage = 'Oops! Something went wrong.';
       });
-      return CartApiData(
-          message: 'Oops! Something went wrong.',
-          cartItems: []
-      );
+      return CartApiData(message: 'Oops! Something went wrong.', cartItems: []);
     }
   }
 
   void updateCart(index, type) async {
     var qty = itemsList[index].quantity;
-    if(qty == 1 && type == 'minus'){qty = 0;}
-    if(qty > 1 && type == 'minus'){qty--;}
-    if(type == 'plus'){qty++;}
-    if(type == 'delete'){qty = 0;}
+    if (qty == 1 && type == 'minus') {
+      qty = 0;
+    }
+    if (qty > 1 && type == 'minus') {
+      qty--;
+    }
+    if (type == 'plus') {
+      qty++;
+    }
+    if (type == 'delete') {
+      qty = 0;
+    }
 
-    final response = await http.post(Uri.https(globals.baseURL,"/api/update-cart"),headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $apiToken'
-        }, body: jsonEncode({
-      "cart_item_id": itemsList[index].id,
-      "quantity": qty,
-    }));
-    
+    final response =
+        await http.post(Uri.https(globals.baseURL, "/api/update-cart"),
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'Authorization': 'Bearer $apiToken'
+            },
+            body: jsonEncode({
+              "cart_item_id": itemsList[index].id,
+              "quantity": qty,
+            }));
+
     var data = jsonDecode(response.body);
     var resCode = response.statusCode;
-    
+
     String message = data['message'];
     if (resCode == 200) {
-      if(qty == 0){
+      if (qty == 0) {
         setState(() {
           itemsList.removeAt(index);
         });
-      }else{
+      } else {
         setState(() {
           itemsList[index].quantity = qty;
         });
       }
       errorToast('$message !!');
-    }else{
+    } else {
       errorToast('$message !!');
     }
   }
@@ -98,14 +105,15 @@ class _CartState extends State<Cart> {
   void submitCart() async {
     final form = _checkoutKey.currentState;
     form!.save();
-    final response = await http.post(Uri.https(globals.baseURL,"/api/checkout"),headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $apiToken'
-        }, body: jsonEncode({
-      "notes": note
-    }));
-    
+    final response =
+        await http.post(Uri.https(globals.baseURL, "/api/checkout"),
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'Authorization': 'Bearer $apiToken'
+            },
+            body: jsonEncode({"notes": note}));
+
     var data = jsonDecode(response.body);
     var resCode = response.statusCode;
     String message = data['message'];
@@ -113,20 +121,21 @@ class _CartState extends State<Cart> {
     if (resCode == 200) {
       errorToast('$message !!');
       checkoutCompleted();
-    }else{
+    } else {
       errorToast('Oops! Something went wrong.');
     }
   }
 
-  void checkoutCompleted(){    
+  void checkoutCompleted() {
     setState(() {
       itemsList.clear();
     });
     goToOrders(context);
   }
 
-  void goToOrders(BuildContext context){
-      Navigator.push( context, MaterialPageRoute(builder: (context) => const OrdersList()));
+  void goToOrders(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const OrdersList()));
   }
 
   errorToast(String toast) {
@@ -188,7 +197,8 @@ class _CartState extends State<Cart> {
                     Image(
                       height: 100,
                       width: 100,
-                      image: NetworkImage(cartApiData.cartItems[index].imageSrc),
+                      image:
+                          NetworkImage(cartApiData.cartItems[index].imageSrc),
                     ),
                     const SizedBox(
                       width: 10,
@@ -201,9 +211,9 @@ class _CartState extends State<Cart> {
                           Text(
                             itemsList[index].productTitle,
                             style: const TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w500,
-                                color: Colors.white
-                            ),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
                           ),
                           const SizedBox(
                             height: 5,
@@ -211,9 +221,9 @@ class _CartState extends State<Cart> {
                           Text(
                             "Variant: ${itemsList[index].variant.title}",
                             style: const TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w500,
-                                color: Colors.white
-                            ),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
                           ),
                           const SizedBox(
                             height: 5,
@@ -221,9 +231,9 @@ class _CartState extends State<Cart> {
                           Text(
                             "SKU: ${itemsList[index].sku}",
                             style: const TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w500,
-                                color: Colors.white
-                            ),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
                           ),
                           const SizedBox(
                             height: 5,
@@ -231,9 +241,9 @@ class _CartState extends State<Cart> {
                           Text(
                             "Vendor: ${itemsList[index].vendor}",
                             style: const TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w500,
-                                color: Colors.white
-                            ),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
                           ),
                           const SizedBox(
                             height: 10,
@@ -241,53 +251,60 @@ class _CartState extends State<Cart> {
                           Text(
                             "₹ ${itemsList[index].price}",
                             style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w800,
-                              color: Colors.indigoAccent.shade400
-                            ),
+                                fontSize: 18,
+                                fontWeight: FontWeight.w800,
+                                color: Colors.indigoAccent.shade400),
                           ),
-
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              IconButton(
-                                onPressed: () { updateCart(index, 'minus'); },
-                                icon: const Icon(Icons.remove_circle_outline_rounded)
-                              ),
-                              OutlinedButton(
-                                onPressed: (){ null; },
-                                child: Text(
-                                  itemsList[index].quantity.toString(),
-                                  style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold
+                              // mainAxisAlignment: MainAxisAlignment.end,
+                              // crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                IconButton(
+                                    onPressed: () {
+                                      updateCart(index, 'minus');
+                                    },
+                                    icon: const Icon(
+                                        Icons.remove_circle_outline_rounded, color: Colors.white,)),
+                                OutlinedButton(
+                                  onPressed: () {
+                                    null;
+                                  },
+                                  child: Text(
+                                    itemsList[index].quantity.toString(),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                              ),
-                              IconButton(
-                                onPressed: () { updateCart(index, 'plus'); },
-                                icon: const Icon(Icons.add_circle_outline_rounded)
-                              ),
-                              const Padding(padding: EdgeInsets.only(right: 20)),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: InkWell(
-                                  onTap: () {
-                                    updateCart(index, 'delete');
-                                  },
-                                  child: Container(
-                                    height: 35,
-                                    width: 70,
-                                    decoration: BoxDecoration(
-                                        color: const Color.fromARGB(240, 210, 74, 64),
-                                        borderRadius:
-                                        BorderRadius.circular(5)),
-                                    child: const Center(
-                                      child: Text('Remove'),
+                                IconButton(
+                                    onPressed: () {
+                                      updateCart(index, 'plus');
+                                    },
+                                    icon: const Icon(
+                                        Icons.add_circle_outline_rounded, color: Colors.white,)),
+                                const Padding(
+                                    padding: EdgeInsets.only(right: 10)),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: InkWell(
+                                    onTap: () {
+                                      updateCart(index, 'delete');
+                                    },
+                                    child: Container(
+                                      height: 35,
+                                      width: 35,
+                                      decoration: BoxDecoration(
+                                          color: const Color.fromARGB(
+                                              240, 210, 74, 64),
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: const Center(
+                                        child: Icon(Icons.delete, color: Colors.white,),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ]
-                          ),
+                              ]),
                         ],
                       ),
                     )
@@ -297,120 +314,119 @@ class _CartState extends State<Cart> {
             ),
           ),
         ),
-      );      
-    }else{
+      );
+    } else {
       return Form(
         key: _checkoutKey,
-        child:  Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[      
-            // Notes
-            Container(
-              margin: const EdgeInsets.only(top: 20, left: 30, right: 30),
-              child: TextFormField(
-                onSaved: (e) => note = e,
-                maxLines: null,
-                minLines: 3,
-                decoration: const InputDecoration(                                  
-                  contentPadding: EdgeInsets.all(20),
-                  hintText: 'Order Notes',
-                  labelText: 'Order Notes',
-                  border: UnderlineInputBorder(),
-                  filled: true,
-                  fillColor: Colors.white,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              // Notes
+              Container(
+                margin: const EdgeInsets.only(top: 20, left: 30, right: 30),
+                child: TextFormField(
+                  onSaved: (e) => note = e,
+                  maxLines: null,
+                  minLines: 3,
+                  decoration: const InputDecoration(
+                    contentPadding: EdgeInsets.all(20),
+                    hintText: 'Order Notes',
+                    labelText: 'Order Notes',
+                    border: UnderlineInputBorder(),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
                 ),
               ),
-            ),
-            // Checkout Submit  Color.fromRGBO(13, 66, 255, 1),
-            Container(
-              margin: const EdgeInsets.only(top: 10),
-              child: ElevatedButton(
-                onPressed: (){
-                  submitCart();
-                },
-                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(const Color.fromRGBO(13, 66, 255, 1))),
-                child: Container(
-                  padding: const EdgeInsets.all(15.0),
-                  child: const Text('CHECKOUT NOW ON PORTAL'),
-                )
-              )
-            ),
-          ]
-        ),
+              // Checkout Submit  Color.fromRGBO(13, 66, 255, 1),
+              Container(
+                  margin: const EdgeInsets.only(top: 10),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        submitCart();
+                      },
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              const Color.fromRGBO(13, 66, 255, 1))),
+                      child: Container(
+                        padding: const EdgeInsets.all(15.0),
+                        child: const Text('CHECKOUT NOW ON PORTAL'),
+                      ))),
+            ]),
       );
     }
   }
 }
 
-
-
-CartApiData cartApiDataFromJson(String str) => CartApiData.fromJson(json.decode(str));
+CartApiData cartApiDataFromJson(String str) =>
+    CartApiData.fromJson(json.decode(str));
 
 String cartApiDataToJson(CartApiData data) => json.encode(data.toJson());
 
 class CartApiData {
-    String message;
-    List<CartItem> cartItems;
+  String message;
+  List<CartItem> cartItems;
 
-    CartApiData({
-        required this.message,
-        required this.cartItems,
-    });
+  CartApiData({
+    required this.message,
+    required this.cartItems,
+  });
 
-    factory CartApiData.fromJson(Map<String, dynamic> json) => CartApiData(
+  factory CartApiData.fromJson(Map<String, dynamic> json) => CartApiData(
         message: json["message"],
-        cartItems: List<CartItem>.from(json["cart_items"].map((x) => CartItem.fromJson(x))),
-    );
+        cartItems: List<CartItem>.from(
+            json["cart_items"].map((x) => CartItem.fromJson(x))),
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "message": message,
         "cart_items": List<dynamic>.from(cartItems.map((x) => x.toJson())),
-    };
+      };
 }
 
 class CartItem {
-    int id;
-    int customerId;
-    int productId;
-    int variantId;
-    String sku;
-    String price;
-    String discountedPrice;
-    int quantity;
-    int processed;
-    String imageSrc;
-    String productTitle;
-    String vendor;
-    String productType;
-    String discountText;
-    Variant variant;
-    Product product;
+  int id;
+  int customerId;
+  int productId;
+  int variantId;
+  String sku;
+  String price;
+  String discountedPrice;
+  int quantity;
+  int processed;
+  String imageSrc;
+  String productTitle;
+  String vendor;
+  String productType;
+  String discountText;
+  Variant variant;
+  Product product;
 
-    CartItem({
-        required this.id,
-        required this.customerId,
-        required this.productId,
-        required this.variantId,
-        required this.sku,
-        required this.price,
-        required this.discountedPrice,
-        required this.quantity,
-        required this.processed,
-        required this.imageSrc,
-        required this.productTitle,
-        required this.vendor,
-        required this.productType,
-        required this.discountText,
-        required this.variant,
-        required this.product,
-    });
+  CartItem({
+    required this.id,
+    required this.customerId,
+    required this.productId,
+    required this.variantId,
+    required this.sku,
+    required this.price,
+    required this.discountedPrice,
+    required this.quantity,
+    required this.processed,
+    required this.imageSrc,
+    required this.productTitle,
+    required this.vendor,
+    required this.productType,
+    required this.discountText,
+    required this.variant,
+    required this.product,
+  });
 
-    factory CartItem.fromJson(Map<String, dynamic> json) => CartItem(
+  factory CartItem.fromJson(Map<String, dynamic> json) => CartItem(
         id: json["id"],
         customerId: json["customer_id"],
         productId: json["product_id"],
         variantId: json["variant_id"],
-        sku: json["sku"]??'',
+        sku: json["sku"] ?? '',
         price: json["price"],
         discountedPrice: json["discounted_price"],
         quantity: json["quantity"],
@@ -422,9 +438,9 @@ class CartItem {
         discountText: json["discount_text"],
         variant: Variant.fromJson(json["variant"]),
         product: Product.fromJson(json["product"]),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "customer_id": customerId,
         "product_id": productId,
@@ -441,29 +457,29 @@ class CartItem {
         "discount_text": discountText,
         "variant": variant.toJson(),
         "product": product.toJson(),
-    };
+      };
 }
 
 class Product {
-    int id;
-    int productId;
-    String title;
-    String handle;
-    String imageSrc;
-    int status;
-    int storeId;
+  int id;
+  int productId;
+  String title;
+  String handle;
+  String imageSrc;
+  int status;
+  int storeId;
 
-    Product({
-        required this.id,
-        required this.productId,
-        required this.title,
-        required this.handle,
-        required this.imageSrc,
-        required this.status,
-        required this.storeId,
-    });
+  Product({
+    required this.id,
+    required this.productId,
+    required this.title,
+    required this.handle,
+    required this.imageSrc,
+    required this.status,
+    required this.storeId,
+  });
 
-    factory Product.fromJson(Map<String, dynamic> json) => Product(
+  factory Product.fromJson(Map<String, dynamic> json) => Product(
         id: json["id"],
         productId: json["product_id"],
         title: json["title"],
@@ -471,9 +487,9 @@ class Product {
         imageSrc: json["image_src"],
         status: json["status"],
         storeId: json["store_id"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "product_id": productId,
         "title": title,
@@ -481,41 +497,41 @@ class Product {
         "image_src": imageSrc,
         "status": status,
         "store_id": storeId,
-    };
+      };
 }
 
 class Variant {
-    int id;
-    int inventoryItemId;
-    String title;
-    int inventoryQuantity;
-    int storeId;
-    Product product;
+  int id;
+  int inventoryItemId;
+  String title;
+  int inventoryQuantity;
+  int storeId;
+  Product product;
 
-    Variant({
-        required this.id,
-        required this.inventoryItemId,
-        required this.title,
-        required this.inventoryQuantity,
-        required this.storeId,
-        required this.product,
-    });
+  Variant({
+    required this.id,
+    required this.inventoryItemId,
+    required this.title,
+    required this.inventoryQuantity,
+    required this.storeId,
+    required this.product,
+  });
 
-    factory Variant.fromJson(Map<String, dynamic> json) => Variant(
+  factory Variant.fromJson(Map<String, dynamic> json) => Variant(
         id: json["id"],
         inventoryItemId: json["inventory_item_id"],
         title: json["title"],
         inventoryQuantity: json["inventory_quantity"],
         storeId: json["store_id"],
         product: Product.fromJson(json["product"]),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "inventory_item_id": inventoryItemId,
         "title": title,
         "inventory_quantity": inventoryQuantity,
         "store_id": storeId,
         "product": product.toJson(),
-    };
+      };
 }
