@@ -25,7 +25,7 @@ class _DealerLoginState extends State<DealerLogin> {
 
   bool _isLoginEnable = true;
 
-  check() {
+  void check() {
     final form = _loginKey.currentState;
     if (form != null && form.validate()) {  //form != null && form.validate() == form!.validate()
       form.save();
@@ -33,7 +33,7 @@ class _DealerLoginState extends State<DealerLogin> {
     }
   }
   
-  login() async {
+  void login() async {
     setState(() {
       _isLoginEnable = false;
     });
@@ -45,7 +45,7 @@ class _DealerLoginState extends State<DealerLogin> {
       "pass_code": passcode,
     }));
 
-    final data = jsonDecode(response.body);
+    var data = jsonDecode(response.body);
     var resCode = response.statusCode;
     
     String message = data['message'];
@@ -76,7 +76,7 @@ class _DealerLoginState extends State<DealerLogin> {
     });
   }
 
-  signOut() async {    
+  void signOut() async {    
     savePref(0, 0, '', '', '', '', '', '', 0, '');
     setState(() {
       _loginStatus = LoginStatus.notSignIn;
@@ -95,7 +95,7 @@ class _DealerLoginState extends State<DealerLogin> {
         textColor: Colors.white);
   }
 
-  savePref(int id, int customerId, String userEmail, String firstName, String lastName, String phone, String ordersCount, String totalSpent, int status, String apiToken) async {
+  void savePref(int id, int customerId, String userEmail, String firstName, String lastName, String phone, String ordersCount, String totalSpent, int status, String apiToken) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt('id', id);
     await prefs.setInt('customerId', customerId);
@@ -107,10 +107,11 @@ class _DealerLoginState extends State<DealerLogin> {
     await prefs.setString('totalSpent', totalSpent);
     await prefs.setInt('status', status);
     await prefs.setString('apiToken', apiToken);
+    await prefs.setInt('cartCount', 0);
   }
 
   int? userStatus = 0;
-  getPref() async {
+  void getPref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       userStatus = prefs.getInt("status");
@@ -249,7 +250,8 @@ class _DealerLoginState extends State<DealerLogin> {
                                 child: ElevatedButton(
                                   onPressed: (){
                                     _isLoginEnable ? check() : null;
-                                  }, 
+                                  },
+                                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(const Color.fromRGBO(13, 66, 255, 1))),
                                   child: Container(
                                     padding: const EdgeInsets.all(15.0),
                                     child: const Text('Login'),

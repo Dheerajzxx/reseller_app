@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'globals.dart' as globals;
+import '../globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -85,20 +85,7 @@ class _OrderDetailState extends State<OrderDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(14, 29, 48, 1),   
-        title: Text("Order Details"),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.shopping_cart_rounded),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications_active_outlined ),
-          )
-        ],
-      ),
+      appBar: const globals.AppBarItems('Order Details'),
       body:
       !isLoaded ? const Center(child: CircularProgressIndicator(),):
       errMessage.isNotEmpty ? Center(child: Text(errMessage),) : orderDetailApiData.order.lineItems.isEmpty ? const Center(child: Text('No Data')) : 
@@ -126,7 +113,7 @@ class _OrderDetailState extends State<OrderDetail> {
                   fontSize: 14),
             ),
             subtitle: Text(
-                '${orderDetailApiData.order.lineItems[index].variant.title} - ${orderDetailApiData.order.lineItems[index].sku} - ${orderDetailApiData.order.lineItems[index].grams}',
+                '${orderDetailApiData.order.lineItems[index].variant.title} - ${orderDetailApiData.order.lineItems[index].sku}${orderDetailApiData.order.lineItems[index].sku != ''? " - " : ''}${orderDetailApiData.order.lineItems[index].grams}',
                 style: const TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -240,7 +227,7 @@ class LineItem {
         id: json["id"],
         lineItemId: json["line_item_id"],
         name: json["name"],
-        sku: json["sku"],
+        sku: json["sku"] ?? '',
         price: json["price"],
         quantity: json["quantity"],
         grams: json["grams"],
