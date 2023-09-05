@@ -56,7 +56,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+        resizeToAvoidBottomInset : false,
+        appBar: AppBar(
         backgroundColor: const Color.fromRGBO(14, 29, 48, 1),        
         actions: <Widget>[
           IconButton(
@@ -75,10 +76,10 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      drawer: Drawer(
+        drawer: Drawer(
         shadowColor: Colors.white70,
         backgroundColor: Colors.white60,
-        width: 240,
+        width: 200,
         shape: const BeveledRectangleBorder(
           borderRadius: BorderRadius.only(
             topRight: Radius.circular(3.0),
@@ -90,20 +91,22 @@ class _HomePageState extends State<HomePage> {
           children: [
             DrawerHeader(
               decoration: const BoxDecoration(
-                color: Color.fromRGBO(14, 29, 48, 0.941),
+                color: Colors.blueAccent
               ),
               // child: Text('Drawer Header', style: TextStyle(color: Colors.white),),
               child: Stack(
                 children: <Widget>[
                   Container(
-                    padding: const EdgeInsets.only(top: 30),
-                    child: Image.asset('assets/PG_Logo.png',),                      
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Image.asset('assets/PG_Logo.png',height: 50,width: 200,),
                   )
                 ],
               ),
             ),
+            // Orders
             ListTile(
-              title: const Text('Tab 1'),
+              leading: const Icon(Icons.shopping_bag),
+              title: const Text('Orders'),
               selected: _selectedIndex == 0,
               onTap: () {
                 // Update the state of the app
@@ -112,8 +115,10 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pop(context);
               },
             ),
+            // Tickets
             ListTile(
-              title: const Text('Tab 2'),
+              leading:  const Icon(Icons.style),
+              title: const Text('Tickets'),
               selected: _selectedIndex == 1,
               onTap: () {
                 // Update the state of the app
@@ -122,8 +127,10 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pop(context);
               },
             ),
+            // My Profile
             ListTile(
-              title: const Text('Tab 3'),
+              leading: const Icon(Icons.person),
+              title: const Text('My Profile'),
               selected: _selectedIndex == 2,
               onTap: () {
                 // Update the state of the app
@@ -135,7 +142,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: SizedBox.expand(
+        body: SizedBox.expand(
         child: PageView(
           controller: _pageController,
           onPageChanged: (index) {
@@ -427,6 +434,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             // Settings
+
             Container(color: const Color.fromARGB(255, 90, 130, 91),),
           ],
         ),
@@ -436,7 +444,7 @@ class _HomePageState extends State<HomePage> {
       //   tooltip: 'Increment',
       //   child: const Icon(Icons.add),
       // ),
-      bottomNavigationBar: BottomNavyBar(
+        bottomNavigationBar: BottomNavyBar(
         selectedIndex: _currentIndex,
         showElevation: true,
         itemCornerRadius: 24,
@@ -447,26 +455,29 @@ class _HomePageState extends State<HomePage> {
           _pageController?.jumpToPage(index);
         },
         items: <BottomNavyBarItem>[
+          // Orders
           BottomNavyBarItem(
             title: const Text('Orders'),
             icon: const Icon(Icons.shopping_bag),
             activeColor: Colors.white,
             textAlign: TextAlign.center,
           ),
+          // Tickets
           BottomNavyBarItem(
             title: const Text('Tickets'),
             icon: const Icon(Icons.style),
             activeColor: Colors.white,
             textAlign: TextAlign.center,
           ),
+          // Settings
           BottomNavyBarItem(
-            title: const Text('Settings'),
+            title: const Text('My Profile'),
             icon: const Icon(Icons.settings),
             activeColor: Colors.white,
             textAlign: TextAlign.center,
           ),
         ],
-      )
+      ),
     );
   }
 }
