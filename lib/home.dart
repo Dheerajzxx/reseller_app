@@ -400,7 +400,7 @@ class _HomePageState extends State<HomePage> {
                   // Warranty Claim History
                   SizedBox(
                     child: GestureDetector(
-                      onTap: (){},
+                      onTap: (){ Navigator.pushNamed(context, 'ticketsList'); },
                       child: Container(
                         padding: const EdgeInsets.only(top: 30, bottom: 30),
                         margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
