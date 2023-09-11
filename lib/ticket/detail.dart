@@ -331,7 +331,7 @@ class _DetailState extends State<Detail> {
                           children: <TextSpan>[
                             for(var i = 0; i< detailApiData.ticketDetails.files.length; i++)
                               ...[
-                                TextSpan( text: '${(i+1).toString()}: '),                                                
+                                TextSpan( text: '${(i+1).toString()}: ', style: const TextStyle(color: Colors.black)),                                                
                                 TextSpan( 
                                   text: '${detailApiData.ticketDetails.files[i].fileName} \n',
                                   style: const TextStyle(color:Color.fromRGBO(13, 66, 255, 1)),
