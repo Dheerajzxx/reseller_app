@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import '../globals.dart' as globals;
@@ -17,6 +18,7 @@ class _DetailState extends State<Detail> {
   String apiToken = '', errMessage = '';
   late DetailApiData detailApiData;
   bool isLoaded = false;
+  final _commentKey = GlobalKey<FormState>();
 
   getPref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -57,7 +59,7 @@ class _DetailState extends State<Detail> {
             productName:'',
             productSku:'',
             invoiceNo:'',
-            invoiceDate:DateTime.now(),
+            invoiceDate:'',
             remark:'',
             status:0,
             oldPartStatus:0,
@@ -91,8 +93,7 @@ class _DetailState extends State<Detail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const globals.AppBarItems('Warranty Details'),
-      body: Center(
-        child: !isLoaded
+      body: !isLoaded
           ? const Center(
               child: CircularProgressIndicator(),
             )
@@ -102,10 +103,497 @@ class _DetailState extends State<Detail> {
                 )
               : detailApiData.ticketDetails.id == 0
                   ? const Center(child: Text('No Data'))
-                  :Text(detailApiData.ticketDetails.invoiceNo),
-      )
+                  : ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: detailApiData.ticketDetails.motoComments.isEmpty ? 1 : detailApiData.ticketDetails.motoComments.length + 2,
+                              itemBuilder: (context, index) {
+                                if (index == 0) {
+                                    return getClaimDetails();
+                                }
+                                index -= 1;
+                                return getCommentsRow(index);
+                              }
+                            ),
+                  // Container(
+                  //     decoration: const BoxDecoration(
+                  //       color: Color.fromRGBO(243, 246, 252, 1)
+                  //     ),
+                  //     child:  Column(
+                  //       mainAxisAlignment: MainAxisAlignment.start,
+                  //       children: <Widget>[
+                  //         const Row(
+                  //           mainAxisAlignment: MainAxisAlignment.start,
+                  //           crossAxisAlignment: CrossAxisAlignment.center,
+                  //           children: <Widget>[
+                  //             Padding(padding: EdgeInsets.only(left:15)),
+                  //             Expanded(
+                  //               child: ListTile(
+                  //                 title: Text('WARRANTY CLAIM',style: TextStyle(
+                  //                 fontWeight: FontWeight.bold,
+                  //                 fontSize: 13.0,
+                  //                 letterSpacing: 1.2,
+                  //               ),),
+                  //                 subtitle: Text('Form to claim your warranty.'),
+                  //               )
+                  //             )
+                  //           ]
+                  //         ),
+                  //         Row(
+                  //           mainAxisAlignment: MainAxisAlignment.start,
+                  //           crossAxisAlignment: CrossAxisAlignment.center,
+                  //           children: <Widget>[
+                  //             const Padding(padding: EdgeInsets.only(left:15)),
+                  //             Expanded(
+                  //               child: ListTile(
+                  //                 title: const Text('INVOICE NUMBER',style: TextStyle(
+                  //                 fontWeight: FontWeight.bold,
+                  //                 fontSize: 13.0,
+                  //                 letterSpacing: 1.2,
+                  //               ),),
+                  //                 subtitle: Text(detailApiData.ticketDetails.invoiceNo),
+                  //               )
+                  //             ),
+                  //             Expanded(
+                  //               child: ListTile(
+                  //                 title: const Text('INVOICE DATE',style: TextStyle(
+                  //                 fontWeight: FontWeight.bold,
+                  //                 fontSize: 13.0,
+                  //                 letterSpacing: 1.2,
+                  //               ),),
+                  //                 subtitle: Text(detailApiData.ticketDetails.invoiceDate),
+                  //               )
+                  //             ),
+                  //           ]
+                  //         ),
+                  //         Row(
+                  //           mainAxisAlignment: MainAxisAlignment.start,
+                  //           crossAxisAlignment: CrossAxisAlignment.center,
+                  //           children: <Widget>[
+                  //             const Padding(padding: EdgeInsets.only(left:15)),
+                  //             Expanded(
+                  //               child: ListTile(
+                  //                 title: const Text('PRODUCT NAME',style: TextStyle(
+                  //                 fontWeight: FontWeight.bold,
+                  //                 fontSize: 13.0,
+                  //                 letterSpacing: 1.2,
+                  //               ),),
+                  //                 subtitle: Text(detailApiData.ticketDetails.productName),
+                  //               )
+                  //             ),
+                  //             Expanded(
+                  //               child: ListTile(
+                  //                 title: const Text('PRODUCT SKU',style: TextStyle(
+                  //                 fontWeight: FontWeight.bold,
+                  //                 fontSize: 13.0,
+                  //                 letterSpacing: 1.2,
+                  //               ),),
+                  //                 subtitle: Text(detailApiData.ticketDetails.productSku),
+                  //               )
+                  //             ),
+                  //           ]
+                  //         ),
+                  //         Row(
+                  //           mainAxisAlignment: MainAxisAlignment.start,
+                  //           crossAxisAlignment: CrossAxisAlignment.center,
+                  //           children: <Widget>[
+                  //             const Padding(padding: EdgeInsets.only(left:15)),
+                  //             Expanded(
+                  //               child: ListTile(
+                  //                 title: const Text('YOUR REMARK',style: TextStyle(
+                  //                 fontWeight: FontWeight.bold,
+                  //                 fontSize: 13.0,
+                  //                 letterSpacing: 1.2,
+                  //               ),),
+                  //                 subtitle: Text(detailApiData.ticketDetails.remark),
+                  //               )
+                  //             ),
+                  //           ]
+                  //         ),
+                  //         Row(
+                  //           mainAxisAlignment: MainAxisAlignment.start,
+                  //           crossAxisAlignment: CrossAxisAlignment.center,
+                  //           children: <Widget>[
+                  //             const Padding(padding: EdgeInsets.only(left:15)),
+                  //             Expanded(
+                  //               child: ListTile(
+                  //                 title: const Text('UPLOADED FILES',style: TextStyle(
+                  //                 fontWeight: FontWeight.bold,
+                  //                 fontSize: 13.0,
+                  //                 letterSpacing: 1.2,
+                  //               ),),
+                  //                 subtitle: 
+                  //                     RichText(
+                  //                       text: TextSpan(
+                  //                         children: <TextSpan>[
+                  //                           for(var i = 0; i< detailApiData.ticketDetails.files.length; i++)
+                  //                             ...[
+                  //                               TextSpan( text: '${(i+1).toString()}: '),                                                
+                  //                               TextSpan( 
+                  //                                 text: '${detailApiData.ticketDetails.files[i].fileName} \n',
+                  //                                 style: const TextStyle(color:Color.fromRGBO(13, 66, 255, 1)),
+                  //                                 recognizer: TapGestureRecognizer()..onTap = () async {
+                  //                                   await showDialog(
+                  //                                     context: context,
+                  //                                     builder: (_) => imageDialog(detailApiData.ticketDetails.files[i].fileName, 'https://${globals.baseURL}/public/${detailApiData.ticketDetails.files[i].filePath+detailApiData.ticketDetails.files[i].fileName}', context)
+                  //                                     );
+                  //                                   }
+                  //                               ),
+                  //                             ],
+                  //                         ],
+                  //                       ),
+                  //                     )
+                  //               )
+                  //             ),
+                  //             Expanded(
+                  //               child: ListTile(
+                  //                 title: const Text('STATUS',style: TextStyle(
+                  //                 fontWeight: FontWeight.bold,
+                  //                 fontSize: 13.0,
+                  //                 letterSpacing: 1.2,
+                  //               ),),
+                  //                 subtitle: Text(detailApiData.ticketDetails.status == 0 ? 'Open' : 'Closed'),
+                  //               )
+                  //             ),
+                  //           ]
+                  //         ),
+                  //         const Divider(
+                  //           color: Colors.black87,
+                  //           thickness: 0.1,
+                  //           indent: 20.0,
+                  //           endIndent: 20.0,
+                  //         ),
+                  //         const Row(
+                  //           mainAxisAlignment: MainAxisAlignment.start,
+                  //           crossAxisAlignment: CrossAxisAlignment.center,
+                  //           children: <Widget>[
+                  //             Padding(padding: EdgeInsets.only(left:15)),
+                  //             Expanded(
+                  //               child: ListTile(
+                  //                 title: Text('COMMENTS BY MOTOUSHER SUPPORT:',style: TextStyle(
+                  //                   fontWeight: FontWeight.bold,
+                  //                   fontSize: 13.0,
+                  //                   letterSpacing: 1.2,
+                  //                 ),),
+                  //               )
+                  //             ),
+                  //           ]
+                  //         ),
+                  //       ]
+                  //     ),
+                  //   )
+      );
+  }
+
+  Widget getCommentsRow(int index) {
+    if (index < detailApiData.ticketDetails.motoComments.length) {
+      return Container(
+        color:const Color.fromRGBO(243, 246, 252, 1),
+        padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
+        child: Card(
+          elevation: 0,
+          color: Colors.white,
+          child: Container(
+            padding: const EdgeInsets.all(14.0),
+            decoration: const BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    offset: Offset(5.0, 5.0),
+                    blurRadius: 10.0,
+                    spreadRadius: 2.0,
+                  ),
+                  BoxShadow(
+                    color: Colors.white,
+                    offset: Offset(0.0, 0.0),
+                    blurRadius: 0.0,
+                    spreadRadius: 0.0,
+                  ),
+                ],
+              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('User Name',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
+                Text(detailApiData.ticketDetails.motoComments[index].createdAt,
+                  style: const TextStyle(
+                    color: Colors.black87,
+                    fontSize: 10.00
+                  ),
+                ),
+                Text(detailApiData.ticketDetails.motoComments[index].comment),
+              ],
+            ),
+          ),
+        ),
+      );
+    } else {
+      return Container(
+        color: const Color.fromRGBO(243, 246, 252, 1),
+        padding: const EdgeInsets.only(bottom: 40.0),
+        child: Form(
+          key: _commentKey,
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Row(
+                  children: [
+                    Padding(padding: EdgeInsets.only(left: 20.0)),
+                    Text('*', style: TextStyle(color: Colors.red),),
+                    Text('Add Comment For Support')
+                  ],
+                ),
+                // Notes
+                Container(
+                  margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
+                  child: TextFormField(
+                    onSaved: (e) => {},
+                    maxLines: null,
+                    minLines: 3,
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.all(20),
+                      hintText: 'Write your comment here.',
+                      border: UnderlineInputBorder(),
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                  ),
+                ),
+                // Checkout Submit  Color.fromRGBO(13, 66, 255, 1),
+                Container(
+                    margin: const EdgeInsets.only(top: 10),
+                    child: ElevatedButton(
+                        onPressed: () {
+                          
+                        },
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                const Color.fromRGBO(13, 66, 255, 1))),
+                        child: Container(
+                          padding: const EdgeInsets.all(15.0),
+                          child: const Text('Post Comment'),
+                        )
+                      )
+                ),
+              ]),
+        ),
+      );
+    }
+  }
+
+  Widget getClaimDetails(){
+    return  Container(
+      decoration: const BoxDecoration(
+        color: Color.fromRGBO(243, 246, 252, 1)
+      ),
+      child:  Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Padding(padding: EdgeInsets.only(left:15)),
+              Expanded(
+                child: ListTile(
+                  title: Text('WARRANTY CLAIM',style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13.0,
+                  letterSpacing: 1.2,
+                ),),
+                  subtitle: Text('Form to claim your warranty.'),
+                )
+              )
+            ]
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              const Padding(padding: EdgeInsets.only(left:15)),
+              Expanded(
+                child: ListTile(
+                  title: const Text('INVOICE NUMBER',style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13.0,
+                  letterSpacing: 1.2,
+                ),),
+                  subtitle: Text(detailApiData.ticketDetails.invoiceNo),
+                )
+              ),
+              Expanded(
+                child: ListTile(
+                  title: const Text('INVOICE DATE',style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13.0,
+                  letterSpacing: 1.2,
+                ),),
+                  subtitle: Text(detailApiData.ticketDetails.invoiceDate),
+                )
+              ),
+            ]
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              const Padding(padding: EdgeInsets.only(left:15)),
+              Expanded(
+                child: ListTile(
+                  title: const Text('PRODUCT NAME',style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13.0,
+                  letterSpacing: 1.2,
+                ),),
+                  subtitle: Text(detailApiData.ticketDetails.productName),
+                )
+              ),
+              Expanded(
+                child: ListTile(
+                  title: const Text('PRODUCT SKU',style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13.0,
+                  letterSpacing: 1.2,
+                ),),
+                  subtitle: Text(detailApiData.ticketDetails.productSku),
+                )
+              ),
+            ]
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              const Padding(padding: EdgeInsets.only(left:15)),
+              Expanded(
+                child: ListTile(
+                  title: const Text('YOUR REMARK',style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13.0,
+                  letterSpacing: 1.2,
+                ),),
+                  subtitle: Text(detailApiData.ticketDetails.remark),
+                )
+              ),
+            ]
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              const Padding(padding: EdgeInsets.only(left:15)),
+              Expanded(
+                child: ListTile(
+                  title: const Text('UPLOADED FILES',style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13.0,
+                  letterSpacing: 1.2,
+                ),),
+                  subtitle: 
+                      RichText(
+                        text: TextSpan(
+                          children: <TextSpan>[
+                            for(var i = 0; i< detailApiData.ticketDetails.files.length; i++)
+                              ...[
+                                TextSpan( text: '${(i+1).toString()}: '),                                                
+                                TextSpan( 
+                                  text: '${detailApiData.ticketDetails.files[i].fileName} \n',
+                                  style: const TextStyle(color:Color.fromRGBO(13, 66, 255, 1)),
+                                  recognizer: TapGestureRecognizer()..onTap = () async {
+                                    await showDialog(
+                                      context: context,
+                                      builder: (_) => imageDialog(detailApiData.ticketDetails.files[i].fileName, 'https://${globals.baseURL}/public/${detailApiData.ticketDetails.files[i].filePath+detailApiData.ticketDetails.files[i].fileName}', context)
+                                      );
+                                    }
+                                ),
+                              ],
+                          ],
+                        ),
+                      )
+                )
+              ),
+              Expanded(
+                child: ListTile(
+                  title: const Text('STATUS',style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13.0,
+                  letterSpacing: 1.2,
+                ),),
+                  subtitle: Text(detailApiData.ticketDetails.status == 0 ? 'Open' : 'Closed'),
+                )
+              ),
+            ]
+          ),
+          const Divider(
+            color: Colors.black87,
+            thickness: 0.1,
+            indent: 20.0,
+            endIndent: 20.0,
+          ),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Padding(padding: EdgeInsets.only(left:15)),
+              Expanded(
+                child: ListTile(
+                  title: Text('COMMENTS BY MOTOUSHER SUPPORT:',style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13.0,
+                    letterSpacing: 1.2,
+                  ),),
+                )
+              ),
+            ]
+          ),
+        ]
+      ),
     );
   }
+
+  Widget imageDialog(text, path, context) {
+    return Dialog(
+      // backgroundColor: Colors.transparent,
+      // elevation: 0,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '$text',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(Icons.close_rounded),
+                  color: Colors.redAccent,
+                ),
+              ],
+            ),
+          ),
+          Container(
+            width: 220,
+            height: 200,
+            child: Image.network(
+              '$path',
+              fit: BoxFit.cover,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 }
 
 
@@ -144,7 +632,7 @@ class TicketDetails {
     String productName;
     String productSku;
     String invoiceNo;
-    DateTime invoiceDate;
+    String invoiceDate;
     String remark;
     int status;
     int oldPartStatus;
@@ -175,7 +663,7 @@ class TicketDetails {
         productName: json["product_name"],
         productSku: json["product_sku"],
         invoiceNo: json["invoice_no"],
-        invoiceDate: DateTime.parse(json["invoice_date"]),
+        invoiceDate: json["invoice_date"],
         remark: json["remark"],
         status: json["status"],
         oldPartStatus: json["old_part_status"],
@@ -191,7 +679,7 @@ class TicketDetails {
         "product_name": productName,
         "product_sku": productSku,
         "invoice_no": invoiceNo,
-        "invoice_date": "${invoiceDate.year.toString().padLeft(4, '0')}-${invoiceDate.month.toString().padLeft(2, '0')}-${invoiceDate.day.toString().padLeft(2, '0')}",
+        "invoice_date": invoiceDate,
         "remark": remark,
         "status": status,
         "old_part_status": oldPartStatus,
