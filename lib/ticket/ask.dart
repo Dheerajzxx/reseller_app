@@ -148,7 +148,7 @@ class _AskState extends State<Ask> {
                   ),
                 ),
               ),
-              // Question Submit  Color.fromRGBO(13, 66, 255, 1),
+              // Question Submit
               Container(
                 margin: const EdgeInsets.only(top: 20),
                 child: ElevatedButton(

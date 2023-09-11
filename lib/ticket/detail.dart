@@ -15,7 +15,8 @@ class Detail extends StatefulWidget {
 }
 
 class _DetailState extends State<Detail> {
-  String apiToken = '', errMessage = '';
+  String apiToken = '', errMessage = '', lasttName = '', firstName = '';
+  String? comment = '';
   late DetailApiData detailApiData;
   bool isLoaded = false;
   final _commentKey = GlobalKey<FormState>();
@@ -24,6 +25,8 @@ class _DetailState extends State<Detail> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       apiToken = prefs.getString("apiToken") ?? '';
+      firstName = prefs.getString("firstName") ?? '';
+      lasttName = prefs.getString("lasttName") ?? '';
     });
     detailApiData = await getDetails();
     setState(() {
@@ -83,6 +86,38 @@ class _DetailState extends State<Detail> {
         textColor: Colors.white);
   }
 
+  void submitComment() async {
+    final form = _commentKey.currentState;
+    form!.save();
+    final response =
+        await http.post(Uri.https(globals.baseURL, "/api/warranty-comment"),
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'Authorization': 'Bearer $apiToken'
+            },
+            body: jsonEncode({"ticket_no": widget.ticketNo,"comment": comment}));
+
+    var data = jsonDecode(response.body);
+    var resCode = response.statusCode;
+    String message = data['message'];
+    if (resCode == 200) {
+      errorToast('$message !!');
+      commentAdded();
+    } else {
+      errorToast('Oops! Something went wrong.');
+    }
+  }
+
+  void commentAdded() {
+    goToDetails(context);
+  }
+
+  void goToDetails(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Detail(widget.ticketNo)));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -104,16 +139,16 @@ class _DetailState extends State<Detail> {
               : detailApiData.ticketDetails.id == 0
                   ? const Center(child: Text('No Data'))
                   : ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: detailApiData.ticketDetails.motoComments.isEmpty ? 1 : detailApiData.ticketDetails.motoComments.length + 2,
-                              itemBuilder: (context, index) {
-                                if (index == 0) {
-                                    return getClaimDetails();
-                                }
-                                index -= 1;
-                                return getCommentsRow(index);
-                              }
-                            ),
+                      shrinkWrap: true,
+                      itemCount: detailApiData.ticketDetails.motoComments.isEmpty ? 1 : detailApiData.ticketDetails.motoComments.length + 2,
+                      itemBuilder: (context, index) {
+                        if (index == 0) {
+                            return getClaimDetails();
+                        }
+                        index -= 1;
+                        return getCommentsRow(index);
+                      }
+                    ),
       );
   }
 
@@ -146,7 +181,7 @@ class _DetailState extends State<Detail> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('User Name',
+                Text('$firstName $lasttName',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold
                   ),
@@ -183,7 +218,13 @@ class _DetailState extends State<Detail> {
                 Container(
                   margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
                   child: TextFormField(
-                    onSaved: (e) => {},
+                    onSaved: (e) => comment = e,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {                                      
+                        return 'Please Enter Your Comment';
+                      }
+                      return null;
+                    },
                     maxLines: null,
                     minLines: 3,
                     decoration: const InputDecoration(
@@ -200,7 +241,7 @@ class _DetailState extends State<Detail> {
                     margin: const EdgeInsets.only(top: 10),
                     child: ElevatedButton(
                         onPressed: () {
-                          
+                          submitComment();
                         },
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
@@ -336,10 +377,16 @@ class _DetailState extends State<Detail> {
                                   text: '${detailApiData.ticketDetails.files[i].fileName} \n',
                                   style: const TextStyle(color:Color.fromRGBO(13, 66, 255, 1)),
                                   recognizer: TapGestureRecognizer()..onTap = () async {
-                                    await showDialog(
-                                      context: context,
-                                      builder: (_) => imageDialog(detailApiData.ticketDetails.files[i].fileName, 'https://${globals.baseURL}/public/${detailApiData.ticketDetails.files[i].filePath+detailApiData.ticketDetails.files[i].fileName}', context)
-                                      );
+                                    List<String> substrings = detailApiData.ticketDetails.files[i].fileName.split(".");
+                                    List<String> imgExt = ['jpeg', 'jpg', 'png'];
+                                      if (imgExt.contains(substrings[1])) {
+                                        await showDialog(
+                                          context: context,
+                                          builder: (_) => imageDialog(detailApiData.ticketDetails.files[i].fileName, 'https://${globals.baseURL}/public/${detailApiData.ticketDetails.files[i].filePath+detailApiData.ticketDetails.files[i].fileName}', context)
+                                        );
+                                      }else if( substrings[1] == 'pdf'){
+                                        
+                                      }
                                     }
                                 ),
                               ],
@@ -414,12 +461,10 @@ class _DetailState extends State<Detail> {
               ],
             ),
           ),
-          Container(
-            width: 220,
-            height: 200,
+          SizedBox(
             child: Image.network(
               '$path',
-              fit: BoxFit.cover,
+              fit: BoxFit.fill,
             ),
           ),
         ],
