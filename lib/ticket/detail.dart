@@ -15,7 +15,7 @@ class Detail extends StatefulWidget {
 }
 
 class _DetailState extends State<Detail> {
-  String apiToken = '', errMessage = '', lasttName = '', firstName = '';
+  String apiToken = '', errMessage = '', lastName = '', firstName = '';
   String? comment = '';
   late DetailApiData detailApiData;
   bool isLoaded = false;
@@ -26,7 +26,7 @@ class _DetailState extends State<Detail> {
     setState(() {
       apiToken = prefs.getString("apiToken") ?? '';
       firstName = prefs.getString("firstName") ?? '';
-      lasttName = prefs.getString("lasttName") ?? '';
+      lastName = prefs.getString("lastName") ?? '';
     });
     detailApiData = await getDetails();
     setState(() {
@@ -181,7 +181,7 @@ class _DetailState extends State<Detail> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('$firstName $lasttName',
+                Text('$firstName $lastName',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold
                   ),
@@ -268,7 +268,7 @@ class _DetailState extends State<Detail> {
         children: <Widget>[
           const Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(padding: EdgeInsets.only(left:15)),
               Expanded(
@@ -285,7 +285,7 @@ class _DetailState extends State<Detail> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const Padding(padding: EdgeInsets.only(left:15)),
               Expanded(
@@ -312,7 +312,7 @@ class _DetailState extends State<Detail> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const Padding(padding: EdgeInsets.only(left:15)),
               Expanded(
@@ -339,7 +339,7 @@ class _DetailState extends State<Detail> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const Padding(padding: EdgeInsets.only(left:15)),
               Expanded(
@@ -356,7 +356,7 @@ class _DetailState extends State<Detail> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const Padding(padding: EdgeInsets.only(left:15)),
               Expanded(
@@ -379,7 +379,7 @@ class _DetailState extends State<Detail> {
                                   recognizer: TapGestureRecognizer()..onTap = () async {
                                     List<String> substrings = detailApiData.ticketDetails.files[i].fileName.split(".");
                                     List<String> imgExt = ['jpeg', 'jpg', 'png'];
-                                      if (imgExt.contains(substrings[1])) {
+                                      if (imgExt.contains(substrings.last)) {
                                         await showDialog(
                                           context: context,
                                           builder: (_) => imageDialog(detailApiData.ticketDetails.files[i].fileName, 'https://${globals.baseURL}/public/${detailApiData.ticketDetails.files[i].filePath+detailApiData.ticketDetails.files[i].fileName}', context)

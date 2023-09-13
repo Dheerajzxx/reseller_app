@@ -7,6 +7,7 @@ import 'package:reseller_plusgrow/order/last_five_purchase.dart';
 import 'package:reseller_plusgrow/order/your_top_ten.dart';
 import 'package:reseller_plusgrow/ticket/ask.dart';
 import 'package:reseller_plusgrow/ticket/faqs.dart';
+import 'package:reseller_plusgrow/ticket/create.dart';
 import 'package:reseller_plusgrow/ticket/history.dart';
 
 void main() {
@@ -23,6 +24,7 @@ void main() {
       'yourTopTen':(context) => const YourTopTen(),
       'askQues':(context) => const Ask(),
       'faqs':(context) => const Faqs(),
+      'addTicket':(context) => const AddTicket(),
       'ticketsList':(context) => const TicketsHistory(),
     },
   ));
