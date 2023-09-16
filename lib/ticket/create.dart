@@ -101,7 +101,7 @@ class _AddTicketState extends State<AddTicket> {
     if (resCode == 200) {
       Products products = productsFromJson(response.body);
       skuList = products.productVariants;
-      productTitleList = products.test;
+      productTitleList = products.titles;
       return products;
     } else {
       errorToast('Oops! Something went wrong.');
@@ -112,7 +112,7 @@ class _AddTicketState extends State<AddTicket> {
           message: 'Oops! Something went wrong.',
           status: false,
           productVariants: [],
-          test: []
+          titles: []
       );
     }
   }
@@ -329,36 +329,36 @@ class Products {
     bool status;
     String message;
     List<ProductVariant> productVariants;
-    List<Test> test;
+    List<Titles> titles;
 
     Products({
         required this.status,
         required this.message,
         required this.productVariants,
-        required this.test,
+        required this.titles,
     });
 
     factory Products.fromJson(Map<String, dynamic> json) => Products(
         status: json["status"],
         message: json["message"],
         productVariants: List<ProductVariant>.from(json["product_variants"].map((x) => ProductVariant.fromJson(x))),
-        test: List<Test>.from(json["product_variants"].map((x) => Test.fromJson(x))),
+        titles: List<Titles>.from(json["product_variants"].map((x) => Titles.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
         "product_variants": List<dynamic>.from(productVariants.map((x) => x.toJson())),
-        "test": List<dynamic>.from(productVariants.map((x) => x.toJson())),
+        "titles": List<dynamic>.from(productVariants.map((x) => x.toJson())),
     };
 }
 
-class Test {
+class Titles {
   Product product;
 
-  Test({required this.product});
+  Titles({required this.product});
 
-  factory Test.fromJson(Map<String, dynamic> json) => Test(
+  factory Titles.fromJson(Map<String, dynamic> json) => Titles(
     product: Product.fromJson(json["product"]),
   );
 
