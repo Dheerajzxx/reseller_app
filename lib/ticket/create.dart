@@ -20,8 +20,10 @@ class _AddTicketState extends State<AddTicket> {
   String? question = '';
   late Products products;
   List skuList = List.filled(0, null, growable: true);
+  List productTitleList = List.filled(0, null, growable: true);
   bool _isSaveEnable = true, isLoaded = false;
   final _saveTicketKey = GlobalKey<FormState>();
+  final TextEditingController _controller = TextEditingController();
 
   void getPref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -99,6 +101,7 @@ class _AddTicketState extends State<AddTicket> {
     if (resCode == 200) {
       Products products = productsFromJson(response.body);
       skuList = products.productVariants;
+      productTitleList = products.test;
       return products;
     } else {
       errorToast('Oops! Something went wrong.');
@@ -108,13 +111,14 @@ class _AddTicketState extends State<AddTicket> {
       return Products(
           message: 'Oops! Something went wrong.',
           status: false,
-          productVariants: []
+          productVariants: [],
+          test: []
       );
     }
   }
 
   void setProductName(sku){
-    print(skuList.indexOf(sku));
+    _controller.text = productTitleList[skuList.indexOf(sku)].toString();
   }
 
   @override
@@ -232,6 +236,7 @@ class _AddTicketState extends State<AddTicket> {
                               Container(
                                 margin: const EdgeInsets.only(top: 0, left: 30, right: 30),
                                 child: TextFormField(
+                                  controller: _controller,
                                   onSaved: (e) {},
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {                                      
@@ -324,26 +329,46 @@ class Products {
     bool status;
     String message;
     List<ProductVariant> productVariants;
+    List<Test> test;
 
     Products({
         required this.status,
         required this.message,
         required this.productVariants,
+        required this.test,
     });
 
     factory Products.fromJson(Map<String, dynamic> json) => Products(
         status: json["status"],
         message: json["message"],
         productVariants: List<ProductVariant>.from(json["product_variants"].map((x) => ProductVariant.fromJson(x))),
+        test: List<Test>.from(json["product_variants"].map((x) => Test.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
         "product_variants": List<dynamic>.from(productVariants.map((x) => x.toJson())),
+        "test": List<dynamic>.from(productVariants.map((x) => x.toJson())),
     };
 }
 
+class Test {
+  Product product;
+
+  Test({required this.product});
+
+  factory Test.fromJson(Map<String, dynamic> json) => Test(
+    product: Product.fromJson(json["product"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "product": product.toJson(),
+  };
+
+  @override
+  String toString() => product.title;
+}
 class ProductVariant {
     int productId;
     int variantId;
