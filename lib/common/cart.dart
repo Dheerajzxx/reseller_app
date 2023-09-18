@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import '../globals.dart' as globals;
+import './globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:reseller_plusgrow/order/orders_list.dart';
@@ -340,7 +340,7 @@ class _CartState extends State<Cart> {
               ),
               // Checkout Submit  Color.fromRGBO(13, 66, 255, 1),
               Container(
-                  margin: const EdgeInsets.only(top: 10),
+                  margin: const EdgeInsets.only(top: 10, bottom: 60),
                   child: ElevatedButton(
                       onPressed: () {
                         submitCart();

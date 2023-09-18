@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:intl/intl.dart';
-import '../globals.dart' as globals;
+import '../common/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:reseller_plusgrow/order/order_detail.dart';

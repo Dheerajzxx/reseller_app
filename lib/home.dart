@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(Icons.shopping_cart_rounded),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () { Navigator.pushNamed(context, 'notifications'); },
             icon: const Icon(Icons.notifications_active_outlined ),
           ),
           IconButton(

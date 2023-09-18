@@ -23,7 +23,7 @@ class AppBarItems extends StatelessWidget implements PreferredSizeWidget {
           icon: const Icon(Icons.shopping_cart_rounded),
         ),
         IconButton(
-          onPressed: () {},
+          onPressed: () { Navigator.pushNamed(context, 'notifications'); },
           icon: const Icon(Icons.notifications_active_outlined ),
         )
       ],

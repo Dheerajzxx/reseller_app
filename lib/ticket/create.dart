@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import '../globals.dart' as globals;
+import '../common/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:reseller_plusgrow/ticket/history.dart';
@@ -369,6 +369,7 @@ class Titles {
   @override
   String toString() => product.title;
 }
+
 class ProductVariant {
     int productId;
     int variantId;
