@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import './common/globals.dart' as globals;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import './profile.dart';
 
 class HomePage extends StatefulWidget {
   final VoidCallback signOut;
@@ -61,7 +62,7 @@ class _HomePageState extends State<HomePage> {
         appBar: const globals.AppBarItems(''),
         drawer: Drawer(
           shadowColor: Colors.white70,
-          backgroundColor: Colors.white60,
+          backgroundColor: Colors.white,
           width: 200,
           shape: const BeveledRectangleBorder(
             borderRadius: BorderRadius.only(
@@ -94,6 +95,8 @@ class _HomePageState extends State<HomePage> {
                 onTap: () {
                   // Update the state of the app
                   _onItemTapped(0);
+                  setState(() => _currentIndex = 0);
+                  _pageController?.jumpToPage(0);
                   // Then close the drawer
                   Navigator.pop(context);
                 },
@@ -106,6 +109,8 @@ class _HomePageState extends State<HomePage> {
                 onTap: () {
                   // Update the state of the app
                   _onItemTapped(1);
+                  setState(() => _currentIndex = 1);
+                  _pageController?.jumpToPage(1);
                   // Then close the drawer
                   Navigator.pop(context);
                 },
@@ -118,6 +123,8 @@ class _HomePageState extends State<HomePage> {
                 onTap: () {
                   // Update the state of the app
                   _onItemTapped(2);
+                  setState(() => _currentIndex = 2);
+                  _pageController?.jumpToPage(2);
                   // Then close the drawer
                   Navigator.pop(context);
                 },
@@ -425,15 +432,10 @@ class _HomePageState extends State<HomePage> {
             ),
             // Settings
 
-            Container(color: const Color.fromARGB(255, 90, 130, 91),),
+            const Profile(),
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: doSomething,
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ),
         bottomNavigationBar: BottomNavyBar(
         selectedIndex: _currentIndex,
         showElevation: true,
@@ -443,6 +445,7 @@ class _HomePageState extends State<HomePage> {
         onItemSelected: (index) {
           setState(() => _currentIndex = index);
           _pageController?.jumpToPage(index);
+          _onItemTapped(index);
         },
         items: <BottomNavyBarItem>[
           // Orders
@@ -462,7 +465,7 @@ class _HomePageState extends State<HomePage> {
           // Settings
           BottomNavyBarItem(
             title: const Text('My Profile'),
-            icon: const Icon(Icons.settings),
+            icon: const Icon(Icons.person_pin_rounded),
             activeColor: Colors.white,
             textAlign: TextAlign.center,
           ),
