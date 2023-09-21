@@ -17,7 +17,7 @@ class AddTicket extends StatefulWidget {
 
 class _AddTicketState extends State<AddTicket> {
   String apiToken = '', errMessage = '';
-  String? question = '';
+  String? invoiceNo = '', productName = '', productSku = '', remark = '';
   late Products products;
   List skuList = List.filled(0, null, growable: true);
   List productTitleList = List.filled(0, null, growable: true);
@@ -48,12 +48,15 @@ class _AddTicketState extends State<AddTicket> {
   }
   
   void saveTicket() async {
-    final response = await http.post(Uri.https(globals.baseURL,"/api/save-question"),headers: {
+    final response = await http.post(Uri.https(globals.baseURL,"/api/save-warranty"),headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization': 'Bearer $apiToken'
         }, body: jsonEncode({
-      "question": question
+      "invoice_no": invoiceNo,
+      "product_name": productName,
+      "product_sku": productSku,
+      "remark": remark,
     }));
     
     var data = jsonDecode(response.body);
@@ -119,6 +122,9 @@ class _AddTicketState extends State<AddTicket> {
 
   void setProductName(sku){
     _controller.text = productTitleList[skuList.indexOf(sku)].toString();
+    setState(() {
+      productSku = sku.toString();
+    });
   }
 
   @override
@@ -176,10 +182,11 @@ class _AddTicketState extends State<AddTicket> {
                                 ],
                               ),
                               const Padding(padding: EdgeInsets.only(top: 5)),
+                              // invoiceNo
                               Container(
                                 margin: const EdgeInsets.only(top: 0, left: 30, right: 30),
                                 child: TextFormField(
-                                  onSaved: (e) {},
+                                  onSaved: (e) => invoiceNo = e,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {                                      
                                       return 'Please Enter Referrence Details.';
@@ -190,7 +197,7 @@ class _AddTicketState extends State<AddTicket> {
                                   minLines: 3,
                                   decoration: const InputDecoration(
                                     contentPadding: EdgeInsets.all(20),
-                                    hintText: 'Order Date, , Purchase Invoice No, Sale Invoice No , etc.',
+                                    hintText: 'Order Date, Purchase Invoice No, Sale Invoice No , etc.',
                                     border: UnderlineInputBorder(),
                                     filled: true,
                                     fillColor: Colors.white,
@@ -206,6 +213,7 @@ class _AddTicketState extends State<AddTicket> {
                                 ],
                               ),
                               const Padding(padding: EdgeInsets.only(top: 5)),
+                              // product SKU
                               Container(
                                 margin: const EdgeInsets.only(left: 30, right: 30),
                                 color: Colors.white,
@@ -215,6 +223,12 @@ class _AddTicketState extends State<AddTicket> {
                                     showSearchBox: true,
                                   ),
                                   onChanged: (v) { setProductName(v);},
+                                  validator: (value) {
+                                    if (value == null || value.toString().isEmpty) {                                      
+                                      return 'Please Slect Product SKU';
+                                    }
+                                    return null;
+                                  },
                                   dropdownDecoratorProps: const DropDownDecoratorProps(
                                       dropdownSearchDecoration: InputDecoration(
                                         hintText: "Select Product SKU",
@@ -233,11 +247,12 @@ class _AddTicketState extends State<AddTicket> {
                                 ],
                               ),
                               const Padding(padding: EdgeInsets.only(top: 5)),
+                              // product name
                               Container(
                                 margin: const EdgeInsets.only(top: 0, left: 30, right: 30),
                                 child: TextFormField(
                                   controller: _controller,
-                                  onSaved: (e) {},
+                                  onSaved: (e) => productName = e,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {                                      
                                       return 'Please Enter Product Name';
@@ -254,6 +269,7 @@ class _AddTicketState extends State<AddTicket> {
                                 ),
                               ),
                               const Padding(padding: EdgeInsets.only(top: 20)),
+                              // remark
                               const Row(
                                 children: [
                                   Padding(padding: EdgeInsets.only(left: 30.0, bottom: 5)),
@@ -265,7 +281,7 @@ class _AddTicketState extends State<AddTicket> {
                               Container(
                                 margin: const EdgeInsets.only(top: 0, left: 30, right: 30, bottom: 20),
                                 child: TextFormField(
-                                  onSaved: (e) {},
+                                  onSaved: (e) => remark = e,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {                                      
                                       return 'Please Enter Your Remark';
@@ -296,11 +312,12 @@ class _AddTicketState extends State<AddTicket> {
                                   Text('You can upload up to 5 Files, including PDF, IMAGES.'),
                                 ],
                               ),
+                              // submit
                               Container(
                                   margin: const EdgeInsets.only(top: 10),
                                   child: ElevatedButton(
                                       onPressed: () {
-                                        
+                                         _isSaveEnable ? submitForm() : null;
                                       },
                                       style: ButtonStyle(
                                           backgroundColor: MaterialStateProperty.all(
@@ -311,6 +328,7 @@ class _AddTicketState extends State<AddTicket> {
                                       )
                                     )
                               ),
+                              const Padding(padding: EdgeInsets.only(top: 40)),
                               ]
                           ),
                         )
