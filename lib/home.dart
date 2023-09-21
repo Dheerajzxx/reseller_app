@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './common/globals.dart' as globals;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 
@@ -57,91 +58,80 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset : false,
-        appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(14, 29, 48, 1),        
-        actions: <Widget>[
-          IconButton(
-            onPressed: () { Navigator.pushNamed(context, 'cart'); },
-            icon: const Icon(Icons.shopping_cart_rounded),
-          ),
-          IconButton(
-            onPressed: () { Navigator.pushNamed(context, 'notifications'); },
-            icon: const Icon(Icons.notifications_active_outlined ),
-          ),
-          IconButton(
-            onPressed: () {
-              signOut();
-            },
-            icon: const Icon(Icons.logout_rounded),
-          )
-        ],
-      ),
+        appBar: const globals.AppBarItems(''),
         drawer: Drawer(
-        shadowColor: Colors.white70,
-        backgroundColor: Colors.white60,
-        width: 200,
-        shape: const BeveledRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(3.0),
-            bottomRight: Radius.circular(3.0),
-          )
-        ),
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: const BoxDecoration(
-                color: Colors.blueAccent
+          shadowColor: Colors.white70,
+          backgroundColor: Colors.white60,
+          width: 200,
+          shape: const BeveledRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(3.0),
+              bottomRight: Radius.circular(3.0),
+            )
+          ),
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: const BoxDecoration(
+                  color: Colors.blueAccent
+                ),
+                // child: Text('Drawer Header', style: TextStyle(color: Colors.white),),
+                child: Stack(
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Image.asset('assets/PG_Logo.png',height: 50,width: 200,),
+                    )
+                  ],
+                ),
               ),
-              // child: Text('Drawer Header', style: TextStyle(color: Colors.white),),
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Image.asset('assets/PG_Logo.png',height: 50,width: 200,),
-                  )
-                ],
+              // Orders
+              ListTile(
+                leading: const Icon(Icons.shopping_bag),
+                title: const Text('Orders'),
+                selected: _selectedIndex == 0,
+                onTap: () {
+                  // Update the state of the app
+                  _onItemTapped(0);
+                  // Then close the drawer
+                  Navigator.pop(context);
+                },
               ),
-            ),
-            // Orders
-            ListTile(
-              leading: const Icon(Icons.shopping_bag),
-              title: const Text('Orders'),
-              selected: _selectedIndex == 0,
-              onTap: () {
-                // Update the state of the app
-                _onItemTapped(0);
-                // Then close the drawer
-                Navigator.pop(context);
-              },
-            ),
-            // Tickets
-            ListTile(
-              leading:  const Icon(Icons.style),
-              title: const Text('Tickets'),
-              selected: _selectedIndex == 1,
-              onTap: () {
-                // Update the state of the app
-                _onItemTapped(1);
-                // Then close the drawer
-                Navigator.pop(context);
-              },
-            ),
-            // My Profile
-            ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text('My Profile'),
-              selected: _selectedIndex == 2,
-              onTap: () {
-                // Update the state of the app
-                _onItemTapped(2);
-                // Then close the drawer
-                Navigator.pop(context);
-              },
-            ),
-          ],
+              // Tickets
+              ListTile(
+                leading:  const Icon(Icons.style),
+                title: const Text('Tickets'),
+                selected: _selectedIndex == 1,
+                onTap: () {
+                  // Update the state of the app
+                  _onItemTapped(1);
+                  // Then close the drawer
+                  Navigator.pop(context);
+                },
+              ),
+              // My Profile
+              ListTile(
+                leading: const Icon(Icons.person),
+                title: const Text('My Profile'),
+                selected: _selectedIndex == 2,
+                onTap: () {
+                  // Update the state of the app
+                  _onItemTapped(2);
+                  // Then close the drawer
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.logout_rounded),
+                title: const Text('Log Out'),
+                onTap: () {
+                  signOut();
+                },
+              ),
+            ],
+          ),
         ),
-      ),
         body: SizedBox.expand(
         child: PageView(
           controller: _pageController,

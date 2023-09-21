@@ -60,10 +60,12 @@ class _DealerLoginState extends State<DealerLogin> {
       String totalSpent = data['customer']['total_spent'];
       int status = data['customer']['status'];
       String apiToken = data['api_token'];
+      int cartCount = await globals.getCartCount(apiToken);
+      int notificationCount = await globals.getNotificationCount(apiToken);
       if (status == 1) {
         setState(() {
           _loginStatus = LoginStatus.signIn;
-          savePref(id, customerId, userEmail, firstName, lastName, phone, ordersCount, totalSpent, status, apiToken);
+          savePref(id, customerId, userEmail, firstName, lastName, phone, ordersCount, totalSpent, status, apiToken, cartCount, notificationCount);
         });
       }else{
         errorToast('Oops! your account is deactivated.');
@@ -77,7 +79,7 @@ class _DealerLoginState extends State<DealerLogin> {
   }
 
   void signOut() async {    
-    savePref(0, 0, '', '', '', '', '', '', 0, '');
+    savePref(0, 0, '', '', '', '', '', '', 0, '', 0, 0);
     setState(() {
       _loginStatus = LoginStatus.notSignIn;
     });
@@ -95,7 +97,7 @@ class _DealerLoginState extends State<DealerLogin> {
         textColor: Colors.white);
   }
 
-  void savePref(int id, int customerId, String userEmail, String firstName, String lastName, String phone, String ordersCount, String totalSpent, int status, String apiToken) async {
+  void savePref(int id, int customerId, String userEmail, String firstName, String lastName, String phone, String ordersCount, String totalSpent, int status, String apiToken, int cartCount, int notifyCount) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt('id', id);
     await prefs.setInt('customerId', customerId);
@@ -108,6 +110,7 @@ class _DealerLoginState extends State<DealerLogin> {
     await prefs.setInt('status', status);
     await prefs.setString('apiToken', apiToken);
     await prefs.setInt('cartCount', 0);
+    await prefs.setInt('notificationCount', 0);
   }
 
   int? userStatus = 0;
@@ -201,7 +204,7 @@ class _DealerLoginState extends State<DealerLogin> {
                                 margin: const EdgeInsets.only(bottom: 20),
                                 child: TextFormField(
                                   autofocus: true,
-                                  initialValue: 'krahul@plusgrow.com',
+                                  initialValue: 'mailbox@plusgrow.com',
                                   onSaved: (e) => email = e,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {                                      
@@ -224,7 +227,7 @@ class _DealerLoginState extends State<DealerLogin> {
                               
                               // Passcode Input
                               TextFormField(
-                                initialValue: '60556646',
+                                initialValue: '29443695',
                                 onSaved: (e) => passcode = e,
                                   validator: (passcode) {
                                     if (passcode == null || passcode.isEmpty) {
