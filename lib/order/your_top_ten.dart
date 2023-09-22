@@ -15,6 +15,7 @@ class YourTopTen extends StatefulWidget {
 
 class _YourTopTenState extends State<YourTopTen> {
   String apiToken = '', errMessage = '';
+  int cartCount = 0, notificationCount = 0;
   late ProductsListApiData productsListApiData;
   bool isLoaded = false;
   List blanklist = List.filled(10, null, growable: true);
@@ -26,6 +27,19 @@ class _YourTopTenState extends State<YourTopTen> {
       apiToken = prefs.getString("apiToken") ?? '';
     });
     productsListApiData = await getProducts();
+    getCounters();
+  }
+
+  void getCounters() async {
+    var getCartCount = await globals.getCartCount(apiToken);
+    var getNotificationCount = await globals.getNotificationCount(apiToken);
+    setState(() {
+      cartCount = getCartCount;
+      notificationCount = getNotificationCount;
+    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('cartCount', getCartCount);
+    await prefs.setInt('notificationCount', getCartCount);
   }
 
   Future<ProductsListApiData> getProducts() async {
@@ -83,6 +97,7 @@ class _YourTopTenState extends State<YourTopTen> {
     setState(() {
        _isCartDisabled[index] = null;
     });
+    getCounters();
   }
 
   errorToast(String toast) {
@@ -106,7 +121,35 @@ class _YourTopTenState extends State<YourTopTen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const globals.AppBarItems('Top 10 Purchases'),
+      appBar: AppBar(
+        backgroundColor: const Color.fromRGBO(14, 29, 48, 1),
+        title: const Text('Top 10 Purchases'),
+        actions: <Widget>[
+          Container(
+            margin : const EdgeInsets.only(top: 12),
+            child: Badge.count(
+              count: cartCount,
+              isLabelVisible: cartCount < 1 ? false : true,
+              child: IconButton(
+                onPressed: () { Navigator.pushNamed(context, 'cart'); },
+                icon: const Icon(Icons.shopping_cart_rounded ),
+              ),
+            ),
+          ),
+          Container(
+            margin : const EdgeInsets.only(top: 12),
+            child: Badge.count(
+              count: notificationCount,
+              isLabelVisible: notificationCount < 1 ? false : true,
+              child: IconButton(
+                onPressed: () { Navigator.pushNamed(context, 'notifications'); },
+                icon: const Icon(Icons.notifications_active_outlined ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 20.0,)
+        ],
+      ),
       body: !isLoaded
           ? const Center(
               child: CircularProgressIndicator(),

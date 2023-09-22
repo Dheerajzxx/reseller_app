@@ -16,6 +16,7 @@ class QuickOrder extends StatefulWidget {
 class _QuickOrderState extends State<QuickOrder> {
   String apiToken = '', errMessage = '';
   String? search = '';
+  int cartCount = 0, notificationCount = 0;
   TextEditingController editingController = TextEditingController();
   late QuickOrderApiData quickOrderApiData;
   bool isLoaded = false;
@@ -31,6 +32,19 @@ class _QuickOrderState extends State<QuickOrder> {
       apiToken = prefs.getString("apiToken") ?? '';
     });
     quickOrderApiData = await getProducts();
+    getCounters();
+  }
+
+  void getCounters() async {
+    var getCartCount = await globals.getCartCount(apiToken);
+    var getNotificationCount = await globals.getNotificationCount(apiToken);
+    setState(() {
+      cartCount = getCartCount;
+      notificationCount = getNotificationCount;
+    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('cartCount', getCartCount);
+    await prefs.setInt('notificationCount', getCartCount);
   }
 
   void filterSearchResults(String query) {
@@ -102,6 +116,7 @@ class _QuickOrderState extends State<QuickOrder> {
     String message = addCartData['message'];
     if (resCode == 200) {
       errorToast(message);
+      getCounters();
     }else{
       errorToast('Oops! Product not added to cart.');
     }
@@ -131,7 +146,35 @@ class _QuickOrderState extends State<QuickOrder> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const globals.AppBarItems('Quick Order'),
+      appBar: AppBar(
+        backgroundColor: const Color.fromRGBO(14, 29, 48, 1),
+        title: const Text('Quick Order'),
+        actions: <Widget>[
+          Container(
+            margin : const EdgeInsets.only(top: 12),
+            child: Badge.count(
+              count: cartCount,
+              isLabelVisible: cartCount < 1 ? false : true,
+              child: IconButton(
+                onPressed: () { Navigator.pushNamed(context, 'cart'); },
+                icon: const Icon(Icons.shopping_cart_rounded ),
+              ),
+            ),
+          ),
+          Container(
+            margin : const EdgeInsets.only(top: 12),
+            child: Badge.count(
+              count: notificationCount,
+              isLabelVisible: notificationCount < 1 ? false : true,
+              child: IconButton(
+                onPressed: () { Navigator.pushNamed(context, 'notifications'); },
+                icon: const Icon(Icons.notifications_active_outlined ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 20.0,)
+        ],
+      ),
       body: Container(
         margin: const EdgeInsets.only(top: 10),
         child: Column(

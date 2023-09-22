@@ -17,6 +17,8 @@ getCartCount(apiToken) async {
     var resCode = response.statusCode;
     if (resCode == 200) {
       var data = jsonDecode(response.body);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('cartCount', data['cart_items'].length);
       return data['cart_items'].length;
     }
     else {
@@ -34,7 +36,9 @@ getNotificationCount(apiToken) async {
     var resCode = response.statusCode;
     if (resCode == 200) {
       var data = jsonDecode(response.body);
-      return data['notifications'].length;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('notificationCount', data['unreadNotifications'].length);
+      return data['unreadNotifications'].length;
     }
     else {
       return 0;
@@ -61,11 +65,11 @@ class _AppBarItemsState extends State<AppBarItems> {
     setState(() {
       apiToken = prefs.getString("apiToken") ?? '';
     });
-    var cartCountData = await getCartCount(apiToken);
-    var notificationCountData = await getNotificationCount(apiToken);
+    getCartCount(apiToken);
+    getNotificationCount(apiToken);
     setState(() {
-      cartCount = cartCountData;
-      notificationCount = notificationCountData;
+      cartCount = prefs.getInt("cartCount") ?? 0;
+      notificationCount = prefs.getInt("notificationCount") ?? 0;
     });
   }
 
@@ -78,6 +82,10 @@ class _AppBarItemsState extends State<AppBarItems> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      // leading: IconButton(
+      //   icon: const Icon(Icons.arrow_back, color: Colors.white),
+      //   onPressed: () => Navigator.pop(context, true),
+      // ), 
       backgroundColor: const Color.fromRGBO(14, 29, 48, 1),
       title: widget.title != '' ? Text(widget.title) : null,
       actions: <Widget>[

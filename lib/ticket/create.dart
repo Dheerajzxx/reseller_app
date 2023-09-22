@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import '../common/globals.dart' as globals;
 import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:reseller_plusgrow/ticket/history.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -400,10 +399,15 @@ class _AddTicketState extends State<AddTicket> {
                                       children: [
                                         Container(
                                           margin:
-                                              const EdgeInsets.only(left: 30),
-                                          child: ElevatedButton(
+                                              const EdgeInsets.only(left: 30, top:10),
+                                          child: Row( children: [
+                                          ElevatedButton(
+                                            style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        const Color.fromRGBO(
+                                                            13, 66, 255, 1))),
                                             onPressed: () async {
-                                              // _clearCachedFiles();
                                               ticketFiles = await FilePicker
                                                   .platform
                                                   .pickFiles(
@@ -421,7 +425,7 @@ class _AddTicketState extends State<AddTicket> {
                                               }
                                             },
                                             child: const Text("Upload Files"),
-                                          ),
+                                          ),]),
                                         ),
                                         if (ticketFiles != null)
                                           Padding(
