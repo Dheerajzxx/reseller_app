@@ -39,7 +39,7 @@ class _NotificationsState extends State<Notifications> {
     var resCode = response.statusCode;
     if (resCode == 200) {
       NotificationsData notificationsData = notificationsDataFromJson(response.body);
-      itemsList = [...notificationsData.unreadNotifications, ...notificationsData.notifications];
+      itemsList = [...notificationsData.notifications];
       return notificationsData;
     } else {
       errorToast('Oops! Something went wrong.');

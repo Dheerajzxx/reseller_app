@@ -238,6 +238,7 @@ class _DealerLoginState extends State<DealerLogin> {
                                     }
                                     return null;
                                   },
+                                keyboardType: TextInputType.number,
                                 decoration: const InputDecoration(                                  
                                     contentPadding: EdgeInsets.only(left: 10),
                                     hintText: 'Pass Code',
