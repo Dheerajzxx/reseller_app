@@ -25,7 +25,6 @@ class _AddTicketState extends State<AddTicket> {
   bool _isSaveEnable = true, isLoaded = false;
   final _saveTicketKey = GlobalKey<FormState>();
   final TextEditingController _controller = TextEditingController();
-  FilePickerResult? result;
   FilePickerResult? ticketFiles;
 
   void getPref() async {
@@ -74,7 +73,6 @@ class _AddTicketState extends State<AddTicket> {
     var data = jsonDecode(response.body);
     var resCode = response.statusCode;
     String message = data['message'];
-    print(data);
     if (resCode == 200) {
       errorToast('$message !!');
       ticketSaved();

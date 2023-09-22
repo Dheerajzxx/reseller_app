@@ -140,7 +140,7 @@ class _DetailState extends State<Detail> {
                   ? const Center(child: Text('No Data'))
                   : ListView.builder(
                       shrinkWrap: true,
-                      itemCount: detailApiData.ticketDetails.motoComments.isEmpty ? 1 : detailApiData.ticketDetails.motoComments.length + 2,
+                      itemCount: detailApiData.ticketDetails.motoComments.isEmpty ? 2 : detailApiData.ticketDetails.motoComments.length + 2,
                       itemBuilder: (context, index) {
                         if (index == 0) {
                             return getClaimDetails();
