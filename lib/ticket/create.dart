@@ -1,8 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'package:file_picker/file_picker.dart';
 import '../common/globals.dart' as globals;
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:reseller_plusgrow/ticket/history.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -24,6 +25,8 @@ class _AddTicketState extends State<AddTicket> {
   bool _isSaveEnable = true, isLoaded = false;
   final _saveTicketKey = GlobalKey<FormState>();
   final TextEditingController _controller = TextEditingController();
+  FilePickerResult? result;
+  FilePickerResult? ticketFiles;
 
   void getPref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -41,24 +44,31 @@ class _AddTicketState extends State<AddTicket> {
     if (form != null && form.validate()) {
       form.save();
       setState(() {
-        _isSaveEnable = false;
+        _isSaveEnable = true;
       });
       saveTicket();
     }
   }
   
   void saveTicket() async {
-    final response = await http.post(Uri.https(globals.baseURL,"/api/save-warranty"),headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $apiToken'
-        }, body: jsonEncode({
-      "invoice_no": invoiceNo,
-      "product_name": productName,
-      "product_sku": productSku,
-      "remark": remark,
-    }));
-    
+    var request = http.MultipartRequest('POST', Uri.https(globals.baseURL,"/api/save-warranty"));
+    request.headers.addAll({"Authorization": "Bearer $apiToken"});
+    request.fields['invoice_no'] = invoiceNo??'';
+    request.fields['product_name'] = productName??'';
+    request.fields['product_sku'] = productSku??'';
+    request.fields['remark'] = remark??'';
+    if(ticketFiles != null){
+      var i = 0;
+        ticketFiles?.files.forEach((element) async {
+        print(element.path);
+        request.files.add(await http.MultipartFile.fromPath('ticket_files[$i]', element.path??'',contentType: MediaType('image', 'jpeg')));
+        i++;
+      });
+    }
+    print(request.fields);
+    print(request.files);
+    var res = await request.send();
+    var response = await http.Response.fromStream(res);
     var data = jsonDecode(response.body);
     var resCode = response.statusCode;
     String message = data['message'];
@@ -74,6 +84,7 @@ class _AddTicketState extends State<AddTicket> {
     setState(() {
       _isSaveEnable = true;
     });
+    _clearCachedFiles();
     goToHistory(context);
   }
 
@@ -125,6 +136,10 @@ class _AddTicketState extends State<AddTicket> {
     setState(() {
       productSku = sku.toString();
     });
+  }
+
+  void _clearCachedFiles() async {
+    await FilePicker.platform.clearTemporaryFiles();
   }
 
   @override
@@ -312,6 +327,45 @@ class _AddTicketState extends State<AddTicket> {
                                   Text('You can upload up to 5 Files, including PDF, IMAGES.'),
                                 ],
                               ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment:CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.only(left: 30),
+                                    child: ElevatedButton(
+                                      onPressed: () async{
+                                          // _clearCachedFiles();
+                                          ticketFiles = await FilePicker.platform.pickFiles(allowMultiple: true, type: FileType.custom, allowedExtensions: ['jpg', 'pdf'],);
+                                          if (ticketFiles == null) {
+                                              errorToast("No file selected");
+                                            } else {
+                                            setState(() {
+                                            });
+                                          }
+                                      },
+                                      child: const Text("Upload Files"),
+                                    ),
+                                  ),
+                                  if(ticketFiles != null)
+                                    Padding(
+                                        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 30.0, right: 30),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                              const Text('Selected files:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                                            ListView.builder(
+                                              shrinkWrap: true,
+                                              itemCount: ticketFiles?.files.length ?? 0,
+                                                itemBuilder: (context, index) {
+                                              return Text(ticketFiles?.files[index].name ?? '', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold));
+                                            })
+                                          ],
+                                        ),
+                                    ),
+                                ],
+                              ),
+                              const Padding(padding: EdgeInsets.only(top: 20)),
                               // submit
                               Container(
                                   margin: const EdgeInsets.only(top: 10),
