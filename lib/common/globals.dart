@@ -37,8 +37,8 @@ getNotificationCount(apiToken) async {
     if (resCode == 200) {
       var data = jsonDecode(response.body);
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setInt('notificationCount', data['unreadNotifications'].length);
-      return data['unreadNotifications'].length;
+      await prefs.setInt('notificationCount', data['unread_notifications_count']);
+      return data['unread_notifications_count'];
     }
     else {
       return 0;

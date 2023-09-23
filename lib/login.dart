@@ -204,7 +204,7 @@ class _DealerLoginState extends State<DealerLogin> {
                                 margin: const EdgeInsets.only(bottom: 20),
                                 child: TextFormField(
                                   autofocus: true,
-                                  initialValue: 'mailbox@plusgrow.com',
+                                  // initialValue: 'mailbox@plusgrow.com',
                                   onSaved: (e) => email = e,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {                                      
@@ -227,7 +227,7 @@ class _DealerLoginState extends State<DealerLogin> {
                               
                               // Passcode Input
                               TextFormField(
-                                initialValue: '29443695',
+                                // initialValue: '29443695',
                                 onSaved: (e) => passcode = e,
                                   validator: (passcode) {
                                     if (passcode == null || passcode.isEmpty) {
@@ -238,6 +238,7 @@ class _DealerLoginState extends State<DealerLogin> {
                                     }
                                     return null;
                                   },
+                                keyboardType: TextInputType.number,
                                 decoration: const InputDecoration(                                  
                                     contentPadding: EdgeInsets.only(left: 10),
                                     hintText: 'Pass Code',
@@ -250,15 +251,22 @@ class _DealerLoginState extends State<DealerLogin> {
                               // Login Button
                               Container(
                                 margin: const EdgeInsets.only(top: 20),
-                                child: ElevatedButton(
+                                child: _isLoginEnable ? ElevatedButton(
                                   onPressed: (){
                                     _isLoginEnable ? check() : null;
                                   },
                                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all(const Color.fromRGBO(13, 66, 255, 1))),
-                                  child: Container(
+                                  child:  Container(
                                     padding: const EdgeInsets.all(15.0),
                                     child: const Text('Login'),
                                   )
+                                ) : ElevatedButton(
+                                    onPressed: (){},
+                                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all(const Color.fromRGBO(214, 224, 245, 0))),
+                                    child:  Container(
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: const Text('Logging.....'),
+                                    )
                                 )
                               ),
                             ],
