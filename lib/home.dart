@@ -41,6 +41,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     getPref();
     _pageController = PageController();
+    print('object');
   }
 
   @override
