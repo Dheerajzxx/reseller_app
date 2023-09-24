@@ -144,6 +144,10 @@ class _QuickOrderState extends State<QuickOrder> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () => Navigator.pushNamed(context, '/'),
+        ),
         backgroundColor: const Color.fromRGBO(14, 29, 48, 1),
         title: const Text('Quick Order'),
         actions: <Widget>[

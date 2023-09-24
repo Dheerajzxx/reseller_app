@@ -151,7 +151,7 @@ class _AddTicketState extends State<AddTicket> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const globals.AppBarItems('Warranty Claim', '/'),
+        appBar: const globals.AppBarItems('Warranty Claim', '/',1),
         body: !isLoaded
             ? const Center(
                 child: CircularProgressIndicator(),

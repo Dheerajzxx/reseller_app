@@ -87,7 +87,7 @@ class _OrdersListState extends State<OrdersList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const globals.AppBarItems('Order History', '/'),
+      appBar: const globals.AppBarItems('Order History', '/',0),
       body: !isLoaded
           ? const Center(
               child: CircularProgressIndicator(),

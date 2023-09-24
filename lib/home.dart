@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  int _currentIndex = 0, _selectedIndex = 0;
+  int _selectedIndex = 0;
 
   PageController? _pageController;
 
@@ -34,6 +34,8 @@ class _HomePageState extends State<HomePage> {
       firstName = prefs.getString("firstName")??'';
       lastName = prefs.getString("lastName")??'';
     });
+    _onItemTapped(globals.selectedIndex);
+    _pageController?.jumpToPage(globals.selectedIndex);
   }
 
   @override
@@ -59,7 +61,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset : false,
-        appBar: const globals.AppBarItems('', '/'),
+        appBar: const globals.AppBarItems('', '/',0),
         drawer: Drawer(
           shadowColor: Colors.white70,
           backgroundColor: Colors.white,
@@ -95,7 +97,6 @@ class _HomePageState extends State<HomePage> {
                 onTap: () {
                   // Update the state of the app
                   _onItemTapped(0);
-                  setState(() => _currentIndex = 0);
                   _pageController?.jumpToPage(0);
                   // Then close the drawer
                   Navigator.pop(context);
@@ -109,7 +110,6 @@ class _HomePageState extends State<HomePage> {
                 onTap: () {
                   // Update the state of the app
                   _onItemTapped(1);
-                  setState(() => _currentIndex = 1);
                   _pageController?.jumpToPage(1);
                   // Then close the drawer
                   Navigator.pop(context);
@@ -123,7 +123,6 @@ class _HomePageState extends State<HomePage> {
                 onTap: () {
                   // Update the state of the app
                   _onItemTapped(2);
-                  setState(() => _currentIndex = 2);
                   _pageController?.jumpToPage(2);
                   // Then close the drawer
                   Navigator.pop(context);
@@ -143,7 +142,7 @@ class _HomePageState extends State<HomePage> {
         child: PageView(
           controller: _pageController,
           onPageChanged: (index) {
-            setState(() => _currentIndex = index);
+            setState(() => _selectedIndex = index);
           },
           children: <Widget>[
             // Orders
@@ -437,13 +436,13 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
         bottomNavigationBar: BottomNavyBar(
-        selectedIndex: _currentIndex,
+        selectedIndex: _selectedIndex,
         showElevation: true,
         itemCornerRadius: 24,
         curve: Curves.easeIn,
         backgroundColor:const Color.fromRGBO(14, 29, 48, 1),
         onItemSelected: (index) {
-          setState(() => _currentIndex = index);
+          setState(() => _selectedIndex = index);
           _pageController?.jumpToPage(index);
           _onItemTapped(index);
         },

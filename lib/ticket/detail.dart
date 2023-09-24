@@ -127,7 +127,7 @@ class _DetailState extends State<Detail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const globals.AppBarItems('Warranty Details', 'ticketsList'),
+      appBar: const globals.AppBarItems('Warranty Details', 'ticketsList',1),
       body: !isLoaded
           ? const Center(
               child: CircularProgressIndicator(),

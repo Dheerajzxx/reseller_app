@@ -88,7 +88,7 @@ class _FaqState extends State<Faqs> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const globals.AppBarItems('Question History', '/'),
+        appBar: const globals.AppBarItems('Question History', '/',1),
         body: SizedBox.expand(
           child: PageView(
             controller: _pageController,

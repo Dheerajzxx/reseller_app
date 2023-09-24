@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // Base URL
 String baseURL = 'resellers.plusgrow.org';
+int selectedIndex = 0;
 
 getCartCount(apiToken) async {
   final response =
@@ -47,7 +48,8 @@ getNotificationCount(apiToken) async {
 
 class AppBarItems extends StatefulWidget implements PreferredSizeWidget {
   final String title, goToRoute;
-  const AppBarItems(this.title,this.goToRoute, {super.key});
+  final int goToIndex;
+  const AppBarItems(this.title,this.goToRoute, this.goToIndex, { super.key});
 
   @override
   State<AppBarItems> createState() => _AppBarItemsState();
@@ -72,6 +74,7 @@ class _AppBarItemsState extends State<AppBarItems> {
       cartCount = prefs.getInt("cartCount") ?? 0;
       notificationCount = prefs.getInt("notificationCount") ?? 0;
     });
+    selectedIndex = widget.goToIndex;
   }
 
   @override

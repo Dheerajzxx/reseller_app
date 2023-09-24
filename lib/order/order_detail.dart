@@ -85,7 +85,7 @@ class _OrderDetailState extends State<OrderDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const globals.AppBarItems('Order Details', 'ordersList'),
+      appBar: const globals.AppBarItems('Order Details', 'ordersList',0),
       body:
       !isLoaded ? const Center(child: CircularProgressIndicator(),):
       errMessage.isNotEmpty ? Center(child: Text(errMessage),) : orderDetailApiData.order.lineItems.isEmpty ? const Center(child: Text('No Data')) : 
