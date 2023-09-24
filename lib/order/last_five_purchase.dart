@@ -102,7 +102,7 @@ class _LastFiveState extends State<LastFive> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const globals.AppBarItems('Last 5 Purchases'),
+      appBar: const globals.AppBarItems('Last 5 Purchases', '/'),
       body: Container(
         margin: const EdgeInsets.only(top: 10),
         child: Column(

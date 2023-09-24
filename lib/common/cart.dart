@@ -41,9 +41,6 @@ class _CartState extends State<Cart> {
       cartCount = getCartCount;
       notificationCount = getNotificationCount;
     });
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('cartCount', getCartCount);
-    await prefs.setInt('notificationCount', getCartCount);
   }
 
   Future<CartApiData> getCart() async {
@@ -175,6 +172,10 @@ class _CartState extends State<Cart> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () => Navigator.pushNamed(context, '/'),
+        ),
         backgroundColor: const Color.fromRGBO(14, 29, 48, 1),
         title: const Text('Cart'),
         actions: <Widget>[

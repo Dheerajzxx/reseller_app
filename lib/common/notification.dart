@@ -99,7 +99,7 @@ class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const globals.AppBarItems('Notifications'),
+      appBar: const globals.AppBarItems('Notifications', '/'),
       body:  !isLoaded
           ? const Center(
               child: CircularProgressIndicator(),

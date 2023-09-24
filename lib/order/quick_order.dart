@@ -15,8 +15,8 @@ class QuickOrder extends StatefulWidget {
 
 class _QuickOrderState extends State<QuickOrder> {
   String apiToken = '', errMessage = '';
-  String? search = '';
   int cartCount = 0, notificationCount = 0;
+  String? search = '';
   TextEditingController editingController = TextEditingController();
   late QuickOrderApiData quickOrderApiData;
   bool isLoaded = false;
@@ -42,9 +42,6 @@ class _QuickOrderState extends State<QuickOrder> {
       cartCount = getCartCount;
       notificationCount = getNotificationCount;
     });
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('cartCount', getCartCount);
-    await prefs.setInt('notificationCount', getCartCount);
   }
 
   void filterSearchResults(String query) {
@@ -116,13 +113,13 @@ class _QuickOrderState extends State<QuickOrder> {
     String message = addCartData['message'];
     if (resCode == 200) {
       errorToast(message);
-      getCounters();
     }else{
       errorToast('Oops! Product not added to cart.');
     }
     setState(() {
        _isCartDisabled[index] = null;
     });
+    getCounters();
   }
 
   errorToast(String toast) {

@@ -41,7 +41,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     getPref();
     _pageController = PageController();
-    print('object');
   }
 
   @override
@@ -60,7 +59,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset : false,
-        appBar: const globals.AppBarItems(''),
+        appBar: const globals.AppBarItems('', '/'),
         drawer: Drawer(
           shadowColor: Colors.white70,
           backgroundColor: Colors.white,

@@ -76,7 +76,7 @@ class _TicketsHistoryState extends State<TicketsHistory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const globals.AppBarItems('Warranty History'),
+      appBar: const globals.AppBarItems('Warranty History','/'),
       body: !isLoaded
           ? const Center(
               child: CircularProgressIndicator(),

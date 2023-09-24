@@ -46,8 +46,8 @@ getNotificationCount(apiToken) async {
 }
 
 class AppBarItems extends StatefulWidget implements PreferredSizeWidget {
-  final String title;
-  const AppBarItems(this.title, {super.key});
+  final String title, goToRoute;
+  const AppBarItems(this.title,this.goToRoute, {super.key});
 
   @override
   State<AppBarItems> createState() => _AppBarItemsState();
@@ -59,6 +59,7 @@ class AppBarItems extends StatefulWidget implements PreferredSizeWidget {
 class _AppBarItemsState extends State<AppBarItems> {
   int cartCount = 0, notificationCount = 0 ;
   String apiToken = '';
+  List<String> routes = ["login", "/"];
 
   void getPref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -82,10 +83,10 @@ class _AppBarItemsState extends State<AppBarItems> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      // leading: IconButton(
-      //   icon: const Icon(Icons.arrow_back, color: Colors.white),
-      //   onPressed: () => Navigator.pop(context, true),
-      // ), 
+      leading:routes.contains(ModalRoute.of(context)?.settings.name) ? null : IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () => Navigator.pushNamed(context, widget.goToRoute),
+      ),
       backgroundColor: const Color.fromRGBO(14, 29, 48, 1),
       title: widget.title != '' ? Text(widget.title) : null,
       actions: <Widget>[

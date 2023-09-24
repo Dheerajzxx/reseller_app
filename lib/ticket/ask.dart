@@ -90,7 +90,7 @@ class _AskState extends State<Ask> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const globals.AppBarItems('Ask Question'),
+      appBar: const globals.AppBarItems('Ask Question', '/'),
       body: Container(
         decoration: const BoxDecoration(
           color: Color.fromRGBO(243, 246, 252, 1)

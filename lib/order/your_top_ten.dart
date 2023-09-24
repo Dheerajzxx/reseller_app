@@ -37,9 +37,6 @@ class _YourTopTenState extends State<YourTopTen> {
       cartCount = getCartCount;
       notificationCount = getNotificationCount;
     });
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('cartCount', getCartCount);
-    await prefs.setInt('notificationCount', getCartCount);
   }
 
   Future<ProductsListApiData> getProducts() async {
@@ -122,6 +119,10 @@ class _YourTopTenState extends State<YourTopTen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () => Navigator.pushNamed(context, '/'),
+        ),
         backgroundColor: const Color.fromRGBO(14, 29, 48, 1),
         title: const Text('Top 10 Purchases'),
         actions: <Widget>[
